@@ -2,7 +2,7 @@ import React from "react";
 import { Navbar, Container, Nav , Button} from "react-bootstrap";
 import doneImg from '../assets/done.svg'
 import environmentImg from '../assets/environment.svg'
-import mailSent from '../assets/mailSent.svg'
+import logo from '../assets/logo.svg'
 
 const NavBar = () => {
     return (
@@ -11,7 +11,7 @@ const NavBar = () => {
             <Container>
             <Navbar.Brand href="/">
             <img
-              src={mailSent}
+              src={logo}
               width="50"
               height="40"
               className="d-inline-block align-top me-2"
@@ -23,8 +23,8 @@ const NavBar = () => {
               <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="ms-auto" id="navmenu">
                   <Nav.Link href="#services">Services</Nav.Link>
-                  <Nav.Link href="#">About</Nav.Link>
-                  <Nav.Link href="#">Contact Us</Nav.Link>
+                  <Nav.Link href="#promo">Promo</Nav.Link>
+                  <Nav.Link href="#contact">Contact Us</Nav.Link>
                 </Nav>
                 <Nav className="">
                   <Button variant="primary" href="#">
