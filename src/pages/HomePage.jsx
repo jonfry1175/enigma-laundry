@@ -20,6 +20,7 @@ const HomePage = () => {
     toast.info("Mohon maaf, Fitur ini sedang dalam tahap pengembangan.");
     setInputPromo("");
   };
+  
   return (
     <div>
       <NavBar />
@@ -52,6 +53,7 @@ const HomePage = () => {
       </section>
 
       {/* Services */}
+      <h2 className="text-center text-bold">Layanan Kami</h2>
       <section className="container pt-4" id="services">
         <div className="row text-center p-2">
           <div className="col-lg-4 col-md-6 col-sm-12 mx-auto g-2 bg-light text-dark">

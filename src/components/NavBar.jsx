@@ -3,6 +3,7 @@ import { Navbar, Container, Nav , Button} from "react-bootstrap";
 import doneImg from '../assets/done.svg'
 import environmentImg from '../assets/environment.svg'
 import logo from '../assets/logo.svg'
+import { Link } from "react-router-dom";
 
 const NavBar = () => {
     return (
@@ -27,9 +28,7 @@ const NavBar = () => {
                   <Nav.Link href="#contact">Contact Us</Nav.Link>
                 </Nav>
                 <Nav className="">
-                  <Button variant="primary" href="#">
-                    Login
-                  </Button>
+                  <Link to={'/login'} className="btn btn-primary">Login</Link>
                 </Nav>
               </Navbar.Collapse>
             </Container>
