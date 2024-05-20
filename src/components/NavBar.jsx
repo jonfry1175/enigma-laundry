@@ -1,11 +1,20 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { Navbar, Container, Nav , Button} from "react-bootstrap";
 import doneImg from '../assets/done.svg'
 import environmentImg from '../assets/environment.svg'
 import logo from '../assets/logo.svg'
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 
 const NavBar = () => {
+  const isAuth = useSelector((state) => state.auth.isAuthenticated);
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    dispatch({ type: "LOGOUT" });
+  };
+
     return (
         <>
           <Navbar className="py-3 fixed-top" bg="dark" expand="lg" variant="dark">
@@ -28,7 +37,11 @@ const NavBar = () => {
                   <Nav.Link href="#contact">Contact Us</Nav.Link>
                 </Nav>
                 <Nav className="">
-                  <Link to={'/login'} className="btn btn-primary">Login</Link>
+                {isAuth ? (
+                <Button variant="primary" onClick={handleLogout}>Logout</Button>
+              ) : (
+                <Link to={'/login'} className="btn btn-primary">Login</Link>
+              )}
                 </Nav>
               </Navbar.Collapse>
             </Container>

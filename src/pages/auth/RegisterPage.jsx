@@ -1,9 +1,45 @@
-import React from 'react';
-import { Button, Form, Container, Row, Col } from 'react-bootstrap';
-import './style.css';
-import { Link } from 'react-router-dom';
+import React, { useState } from "react";
+import { Button, Form, Container, Row, Col } from "react-bootstrap";
+import "./style.css";
+import { Link, useNavigate } from "react-router-dom";
+import { axiosInstance } from "../../lib/axios";
+import { useForm, Controller } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+
+const validateForm = z.object({
+  name: z.string().min(1, "Nama tidak boleh kosong"),
+  email: z.string().email("Email tidak valid"),
+  username: z.string().min(5, "Username minimal 5 karakter"),
+  password: z.string().min(5, "Password minimal 5 karakter"),
+});
 
 const RegisterPage = () => {
+  const navigate = useNavigate();
+  const form = useForm({
+    defaultValues: {
+      name: "",
+      email: "",
+      username: "",
+      password: "",
+    },
+    resolver: zodResolver(validateForm),
+  });
+
+  const registerUser = async (data) => {
+    try {
+      const userData = {...data, role: "employee"}
+      const response = await axiosInstance.post("/auth/register", userData);
+      toast.success("Register Success");
+      navigate("/login");
+
+    } catch (error) {
+      console.error(error.message);
+      toast.error("Register Failed");
+    }
+  };
+
   return (
     <div className="d-flex align-items-center justify-content-center vh-100 bg-light login-page">
       <Container>
@@ -12,25 +48,89 @@ const RegisterPage = () => {
             <div className="text-center mb-4">
               <h2>Daftar Akun Baru</h2>
             </div>
-            <Form>
+            <Form onSubmit={form.handleSubmit(registerUser)}>
               <Form.Group className="mb-3" controlId="formBasicName">
                 <Form.Label>Nama</Form.Label>
-                <Form.Control type="text" placeholder="Enter name" />
+                <Controller
+                  control={form.control}
+                  name="name"
+                  render={({ field, fieldState }) => (
+                    <div>
+                      <Form.Control
+                        type="text"
+                        placeholder="Enter name"
+                        {...field}
+                        isInvalid={Boolean(fieldState.error)}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {fieldState.error?.message}
+                      </Form.Control.Feedback>
+                    </div>
+                  )}
+                />
               </Form.Group>
 
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Email</Form.Label>
-                <Form.Control type="email" placeholder="Enter email" />
+                <Controller
+                  control={form.control}
+                  name="email"
+                  render={({ field, fieldState }) => (
+                    <div>
+                      <Form.Control
+                        type="text"
+                        placeholder="Enter Email"
+                        {...field}
+                        isInvalid={Boolean(fieldState.error)}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {fieldState.error?.message}
+                      </Form.Control.Feedback>
+                    </div>
+                  )}
+                />
               </Form.Group>
 
               <Form.Group className="mb-3" controlId="formBasicUsername">
                 <Form.Label>Username</Form.Label>
-                <Form.Control type="text" placeholder="Enter username" />
+                <Controller
+                  control={form.control}
+                  name="username"
+                  render={({ field, fieldState }) => (
+                    <div>
+                      <Form.Control
+                        type="text"
+                        placeholder="Enter username"
+                        {...field}
+                        isInvalid={Boolean(fieldState.error)}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {fieldState.error?.message}
+                      </Form.Control.Feedback>
+                    </div>
+                  )}
+                />
               </Form.Group>
 
               <Form.Group className="mb-3" controlId="formBasicPassword">
                 <Form.Label>Password</Form.Label>
-                <Form.Control type="password" placeholder="Password" />
+                <Controller
+                  control={form.control}
+                  name="password"
+                  render={({ field, fieldState }) => (
+                    <div>
+                      <Form.Control
+                        type="password"
+                        placeholder="Enter password"
+                        {...field}
+                        isInvalid={Boolean(fieldState.error)}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {fieldState.error?.message}
+                      </Form.Control.Feedback>
+                    </div>
+                  )}
+                />
               </Form.Group>
 
               <Button variant="primary" type="submit" className="w-100 mb-3">
@@ -38,7 +138,9 @@ const RegisterPage = () => {
               </Button>
 
               <div className="text-center">
-                <Link to={'/login'} className='d-block mb-2'>Sudah punya akun? Masuk</Link>
+                <Link to={"/login"} className="d-block mb-2">
+                  Sudah punya akun? Masuk
+                </Link>
               </div>
             </Form>
           </Col>
@@ -46,6 +148,6 @@ const RegisterPage = () => {
       </Container>
     </div>
   );
-}
+};
 
 export default RegisterPage;

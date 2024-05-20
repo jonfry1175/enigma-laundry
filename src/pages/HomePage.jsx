@@ -8,8 +8,10 @@ import solution from "../assets/solution.svg";
 import contact from "../assets/contact.svg";
 import Footer from "../components/Footer";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
+  const navigate = useNavigate();
   const [inputPromo, setInputPromo] = useState("");
 
   const handleSubmit = () => {
@@ -20,6 +22,10 @@ const HomePage = () => {
     toast.info("Mohon maaf, Fitur ini sedang dalam tahap pengembangan.");
     setInputPromo("");
   };
+
+  const handleServices = () => {
+    navigate("/dashboard");
+  }
   
   return (
     <div>
@@ -39,7 +45,7 @@ const HomePage = () => {
                 Pilih{" "}
                 <span className="text-danger fw-bold">Enigma Laundry</span>
               </p>
-              <button className="btn btn-primary btn-lg">
+              <button onClick={handleServices} className="btn btn-primary btn-lg">
                 Telusuri Layanan
               </button>
             </div>
