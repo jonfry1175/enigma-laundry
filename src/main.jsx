@@ -3,10 +3,13 @@ import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";  // Pastikan ini sudah diimpor
+
+
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import {createStore} from "redux"
-import { reducers } from "./redux/store.js";
+import { reducers } from "./store/store.js";
 
 const store = createStore(reducers)
 

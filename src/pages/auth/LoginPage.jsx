@@ -51,7 +51,7 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (selectorToken) {
-      navigate("/dashboard");
+      navigate("/dashboard-customers");
     }
   }, [selectorToken, navigate]);
 
