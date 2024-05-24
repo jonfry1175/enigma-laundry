@@ -26,6 +26,9 @@ importers:
       react-bootstrap:
         specifier: ^2.10.2
         version: 2.10.2(@types/react@18.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react-confirm-alert:
+        specifier: ^3.0.6
+        version: 3.0.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-dom:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
@@ -1269,6 +1272,12 @@ packages:
     peerDependenciesMeta:
       '@types/react':
         optional: true
+
+  react-confirm-alert@3.0.6:
+    resolution: {integrity: sha512-rplP6Ed9ZSNd0KFV5BUzk4EPQ77BxsrayllBXGFuA8xPXc7sbBjgU5KUrNpl7aWFmP7mXRlVXfuy1IT5DbffYw==}
+    peerDependencies:
+      react: '>=18.0.0'
+      react-dom: '>=10.0.0'
 
   react-dom@18.3.1:
     resolution: {integrity: sha512-5m4nQKp+rZRb09LNH59GM4BxTh9251/ylbKIbpe7TpGxfJ+9kv6BLkLBXIjjspbgbnIBNqlI23tRnTWT0snUIw==}
@@ -2880,6 +2889,11 @@ snapshots:
       warning: 4.0.3
     optionalDependencies:
       '@types/react': 18.3.2
+
+  react-confirm-alert@3.0.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    dependencies:
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
 
   react-dom@18.3.1(react@18.3.1):
     dependencies:

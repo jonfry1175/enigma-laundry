@@ -39,6 +39,7 @@ const LoginPage = () => {
       } else {
         localStorage.setItem("token", token);
         dispatch({ type: "SET_TOKEN", token });
+        console.log(`token: ${token}`);
         toast.success("Login Success");
       }
       // console.log(token)
