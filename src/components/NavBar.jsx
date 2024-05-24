@@ -5,15 +5,41 @@ import environmentImg from '../assets/environment.svg'
 import logo from '../assets/logo.svg'
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import {toast} from 'sonner'
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
 
 const NavBar = () => {
+  const navigate = useNavigate();
   const isAuth = useSelector((state) => state.auth.isAuthenticated);
   const dispatch = useDispatch();
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     dispatch({ type: "LOGOUT" });
+    toast.success("Logout Success");
+    navigate("/");
+
   };
+
+  const handleDeleteClick = () => {
+    confirmAlert({
+      title: 'Confirm to Logout',
+      message: 'Apakah kamu yakin untuk keluar?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => handleLogout()
+        },
+        {
+          label: 'No',
+          onClick: () => {}
+        }
+      ]
+    });
+  }
+
 
     return (
         <>
@@ -38,7 +64,7 @@ const NavBar = () => {
                 </Nav>
                 <Nav className="">
                 {isAuth ? (
-                <Button variant="primary" onClick={handleLogout}>Logout</Button>
+                <Button variant="primary" onClick={handleDeleteClick}>Logout</Button>
               ) : (
                 <Link to={'/login'} className="btn btn-primary">Login</Link>
               )}

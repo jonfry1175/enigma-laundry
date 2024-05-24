@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button, Table } from "react-bootstrap";
-import Sidebar from "../../../components/Sidebar";
 import { axiosInstance } from "../../../lib/axios";
 import { toast } from "sonner";
 import { confirmAlert } from "react-confirm-alert";
 import EditCustomerModal from "./EditCustomerModal"; 
 import CreateCustomerModal from "./CreateCustomerModal";
+import Sidebar from "../../../components/Sidebar";
+import withAuth from "../../../hoc/withAuth";
+import { useSelector } from "react-redux";
 
 const Customer = () => {
   const [customerData, setCustomerData] = useState([]);
@@ -14,10 +16,11 @@ const Customer = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false); // State to control the visibility of the Create Customer modal
 
+  const token = useSelector((state) => state.auth.token);
+
 
   const getCustomers = async () => {
     try {
-      const token = localStorage.getItem("token");
       const headers = {
         Authorization: `Bearer ${token}`,
       };
@@ -30,7 +33,6 @@ const Customer = () => {
 
   const deleteCustomer = async (id) => {
     try {
-      const token = localStorage.getItem("token");
       const headers = {
         Authorization: `Bearer ${token}`,
       };
@@ -69,7 +71,6 @@ const Customer = () => {
 
   const handleSaveChanges = async (id, updatedData) => {
     try {
-      const token = localStorage.getItem("token");
       const headers = {
         Authorization: `Bearer ${token}`,
       };
@@ -163,4 +164,4 @@ const Customer = () => {
   );
 };
 
-export default Customer;
+export default withAuth(Customer);

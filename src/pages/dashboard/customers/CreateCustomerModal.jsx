@@ -3,6 +3,7 @@ import { Modal, Button, Form } from "react-bootstrap";
 import { useState } from "react";
 import { toast } from "sonner";
 import { axiosInstance } from "../../../lib/axios";
+import { useSelector } from "react-redux";
 
 const CreateCustomerModal = ({ show, handleClose, handleCreate }) => {
   const [formData, setFormData] = useState({
@@ -10,6 +11,8 @@ const CreateCustomerModal = ({ show, handleClose, handleCreate }) => {
     phoneNumber: "",
     address: "",
   });
+
+  const token = useSelector((state) => state.auth.token);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,7 +25,6 @@ const CreateCustomerModal = ({ show, handleClose, handleCreate }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem("token");
       const headers = {
         Authorization: `Bearer ${token}`,
       };

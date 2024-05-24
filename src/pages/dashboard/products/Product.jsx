@@ -7,6 +7,8 @@ import { toast } from "sonner";
 import { confirmAlert } from "react-confirm-alert";
 import CreateProductModal from "./CreateProductModal";
 import EditProductModal from "./EditProductModal";
+import withAuth from "../../../hoc/withAuth";
+import { useSelector } from "react-redux";
 
 const Product = () => {
   const [productData, setProductData] = useState([]);
@@ -14,9 +16,10 @@ const Product = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
+  const token = useSelector((state) => state.auth.token);
+
   const getProducts = async () => {
     try {
-      const token = localStorage.getItem("token");
       const headers = {
         Authorization: `Bearer ${token}`,
       };
@@ -31,7 +34,6 @@ const Product = () => {
 
   const deleteProduct = async (id) => {
     try {
-      const token = localStorage.getItem("token");
       const headers = {
         Authorization: `Bearer ${token}`,
       };
@@ -79,7 +81,6 @@ const Product = () => {
 
   const handleSaveChanges = async (id, updatedData) => {
     try {
-      const token = localStorage.getItem("token");
       const headers = {
         Authorization: `Bearer ${token}`,
       };
@@ -166,4 +167,4 @@ const Product = () => {
   );
 };
 
-export default Product;
+export default withAuth(Product);

@@ -1,13 +1,44 @@
 import React, { useState } from "react";
 import "./sidebar.css";
-import { Link } from "react-router-dom";
+import { Link , useNavigate} from "react-router-dom";
+import { Button } from "react-bootstrap";
+import { confirmAlert} from 'react-confirm-alert'
+import { toast } from "sonner";
+import { useDispatch } from "react-redux";
 
 const Sidebar = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(true);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    dispatch({ type: "LOGOUT" });
+    toast.success("Logout Success");
+    navigate("/");
+
+  };
+
+  const handleDeleteClick = () => {
+    confirmAlert({
+      title: 'Confirm to Logout',
+      message: 'Apakah kamu yakin untuk keluar?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => handleLogout()
+        },
+        {
+          label: 'No',
+          onClick: () => {}
+        }
+      ]
+    });
+  }
 
   return (
     <div
@@ -71,12 +102,14 @@ const Sidebar = () => {
           <span className="ms-2">User</span>
         </a>
         <div className="dropdown-menu" aria-labelledby="triggerId">
-          <a href="#" className="dropdown-item">
-            Profile
-          </a>
-          <a href="#" className="dropdown-item">
-            Settings
-          </a>
+          <Link to={"/"} className="dropdown-item">
+            Home
+          </Link>
+          <Button 
+          onClick={handleDeleteClick}
+          className="dropdown-item">
+            Logout
+          </Button>
         </div>
       </div>
     </div>

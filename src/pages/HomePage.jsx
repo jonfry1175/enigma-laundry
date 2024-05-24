@@ -9,8 +9,10 @@ import contact from "../assets/contact.svg";
 import Footer from "../components/Footer";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const HomePage = () => {
+  const isAuth = useSelector((state) => state.auth.isAuthenticated);
   const navigate = useNavigate();
   const [inputPromo, setInputPromo] = useState("");
 
@@ -24,13 +26,13 @@ const HomePage = () => {
   };
 
   const handleServices = () => {
-    navigate("/dashboard");
+    navigate("/dashboard-customers");
   }
-  
+
+
   return (
     <div>
       <NavBar />
-
       {/* Header */}
       <section className="p-5 m-5 text-center text-sm-start">
         <div className="container">
@@ -46,7 +48,7 @@ const HomePage = () => {
                 <span className="text-danger fw-bold">Enigma Laundry</span>
               </p>
               <button onClick={handleServices} className="btn btn-primary btn-lg">
-                Telusuri Layanan
+                {isAuth ? "Buka Dashboard" : "Telusuri Layanan"}
               </button>
             </div>
             <img
