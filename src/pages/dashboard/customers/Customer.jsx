@@ -17,6 +17,7 @@ const Customer = () => {
   const [showCreateModal, setShowCreateModal] = useState(false); // State to control the visibility of the Create Customer modal
 
   const token = useSelector((state) => state.auth.token);
+  // const token = localStorage.getItem("token");
 
 
   const getCustomers = async () => {

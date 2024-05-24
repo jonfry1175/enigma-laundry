@@ -1,4 +1,3 @@
-import HomePage from "./pages/HomePage";
 import { Toaster } from "sonner";
 import { Routes, Route } from "react-router-dom";
 import LoginPage from "./pages/auth/LoginPage";
@@ -7,13 +6,21 @@ import NotFound from "./pages/NotFound";
 import Customer from "./pages/dashboard/customers/Customer";
 import Product from "./pages/dashboard/products/Product";
 import Transactions from "./pages/dashboard/transactions/Transactions";
+import Loader from "./components/Loader";
+import { lazy, Suspense } from "react";
+
+const HomePage = lazy(() => import("./pages/HomePage"));
 
 function App() {
   return (
     <>
       <Toaster position="top-center" />
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={
+          <Suspense fallback={<Loader />}>
+            <HomePage />
+          </Suspense>
+        } />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/dashboard-customers" element={<Customer />} />
