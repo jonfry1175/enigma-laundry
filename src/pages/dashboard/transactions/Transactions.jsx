@@ -25,12 +25,12 @@ const Transactions = () => {
       transactions.forEach((transaction) => {
         const customerId = transaction.customer.id;
 
-        // jika customer belum ada di objek newCustomerData, tambahkan entri baru
+        // jika customerId belum ada di objek newCustomerData, tambahkan property baru
         if (!newCustomerData[customerId]) {
           newCustomerData[customerId] = {
             ...transaction.customer, // copy semua properti customer
-            transactions: [], // tambahkan properti transactions
-            transactionCount: 0, // tambahkan properti transactionCount
+            transactions: [], // tambahkan properti transactions yang menampung daftar transaksi dari response.data.data
+            transactionCount: 0, // tambahkan properti transactionCount untuk menghitung jumlah transaksi
           };
         }
         // Tambahkan transaksi ke daftar transaksi pelanggan
@@ -41,13 +41,14 @@ const Transactions = () => {
 
       setCustomerData(newCustomerData);
       console.log(token);
+      console.log(response.data.data);
     } catch (error) {
       console.log(error.message);
     }
   };
 
   const check = () => {
-    console.table(customerData);
+    console.log(customerData);
   };
 
   // ambil detail by customer id
@@ -133,8 +134,7 @@ const Transactions = () => {
                       {transaction.billDetails.reduce(
                         (acc, item) => acc + item.qty,
                         0
-                      )} 
-                      {/* ambil product.type */}
+                      )}{" "}
                       {transaction.billDetails.map((item) => item.product.type)}
                     </td>
                     <td>

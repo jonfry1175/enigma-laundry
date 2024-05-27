@@ -11,8 +11,42 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const Transactions = lazy(() =>
   import("./pages/dashboard/transactions/Transactions")
 );
+import { axiosInstance } from "./lib/axios";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 function App() {
+  const token = useSelector((state) => state.auth.token);
+  const dispatch = useDispatch();
+
+  const refreshToken = async () => {
+    try {
+      const response = await axiosInstance.get("/auth/refresh-token", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const newToken = response.data.data.token;
+      if (response.data.status.code === 201) {
+        localStorage.setItem("token", newToken);
+        dispatch({ type: "SET_TOKEN", token: newToken });
+        console.log('token refreshed');
+      } else {
+        console.log("failed to refresh token");
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(refreshToken, 1000 * 60 * 30); // 30 menit
+    // Membersihkan interval ketika komponen unmount atau dependensi berubah
+    return () => clearInterval(intervalId);
+  }, [token, dispatch]);
+  
+
   return (
     <>
       <Toaster position="top-center" />

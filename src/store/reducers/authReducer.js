@@ -1,10 +1,3 @@
-//  INI PERTANYAANYA
-
-// const DEFAULT_STATE = {
-//     token: null,
-//     isAuthenticated: false,
-// };
-
 const valToken = localStorage.getItem("token");
 
 const DEFAULT_STATE = {
