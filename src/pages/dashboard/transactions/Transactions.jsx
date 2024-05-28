@@ -1,14 +1,23 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "../../../components/Sidebar";
-import { Button, Table, Modal } from "react-bootstrap";
+import { Button, Table, Modal, ListGroup, Form } from "react-bootstrap";
 import { axiosInstance } from "../../../lib/axios";
 import withAuth from "../../../hoc/withAuth";
 import { useSelector } from "react-redux";
+import axios from "axios";
+import { toast } from "sonner";
+
 
 const Transactions = () => {
+  const [customerDataTransaction, setCustomerDataTransaction] = useState([]);
+  const [productData, setProductData] = useState([]);
   const [customerData, setCustomerData] = useState([]);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
-  const [showModal, setShowModal] = useState(false);
+  const [showModalDetail, setShowModalDetail] = useState(false);
+  const [showModalCreate, setShowModalCreate] = useState(false);
+  const [selectedCustomerId, setSelectedCustomerId] = useState("");
+  const [quantity, setQuantity] = useState(0);
+  const [selectedProduct, setSelectedProduct] = useState("");
 
   const token = useSelector((state) => state.auth.token);
 
@@ -20,26 +29,26 @@ const Transactions = () => {
       const response = await axiosInstance.get("/bills", { headers });
       const transactions = response.data.data;
 
-      const newCustomerData = {};
+      const newCustomerDataTransaction = {};
 
       transactions.forEach((transaction) => {
         const customerId = transaction.customer.id;
 
-        // jika customerId belum ada di objek newCustomerData, tambahkan property baru
-        if (!newCustomerData[customerId]) {
-          newCustomerData[customerId] = {
+        // jika customerId belum ada di objek newCustomerDataTransaction, tambahkan property baru
+        if (!newCustomerDataTransaction[customerId]) {
+          newCustomerDataTransaction[customerId] = {
             ...transaction.customer, // copy semua properti customer
             transactions: [], // tambahkan properti transactions yang menampung daftar transaksi dari response.data.data
             transactionCount: 0, // tambahkan properti transactionCount untuk menghitung jumlah transaksi
           };
         }
         // Tambahkan transaksi ke daftar transaksi pelanggan
-        newCustomerData[customerId].transactions.push(transaction);
+        newCustomerDataTransaction[customerId].transactions.push(transaction);
         // Tingkatkan jumlah transaksi pelanggan
-        newCustomerData[customerId].transactionCount += 1;
+        newCustomerDataTransaction[customerId].transactionCount += 1;
       });
 
-      setCustomerData(newCustomerData);
+      setCustomerDataTransaction(newCustomerDataTransaction);
       console.log(token);
       console.log(response.data.data);
     } catch (error) {
@@ -48,18 +57,79 @@ const Transactions = () => {
   };
 
   const check = () => {
-    console.log(customerData);
+    console.log(customerDataTransaction);
+  };
+
+  // get product data
+  const getProducts = async () => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+      const response = await axiosInstance.get("/products", { headers });
+      setProductData(response.data.data);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  // get customer data
+  const getCustomers = async () => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+      const response = await axiosInstance.get("/customers", { headers });
+      setCustomerData(response.data.data);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  // TODO: create Transaction
+  const createTransaction = async () => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+      const payload = {
+        customerId: selectedCustomerId,
+        billDetails: [
+          {
+            product: {
+              id: selectedProduct,
+            },
+            qty: quantity,
+          },
+        ],
+      };
+      const response = await axiosInstance.post("/bills", payload, { headers });
+      // const response = await axios.post("http://localhost:8010/api/v1/bills/", payload, { headers });
+      if(response.status === 201) {
+        toast.success("Transaction Created Successfully");
+      } else {
+        toast.error("Transaction Failed");
+      }
+      console.log(response.data.data);
+      console.log(payload);
+      getTransactions();
+      setShowModalCreate(false);
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   // ambil detail by customer id
-  const handleClick = (customerData) => {
-    setShowModal(true);
-    setSelectedCustomer(customerData);
-    console.log(customerData);
+  const handleClick = (customerDataTransaction) => {
+    setShowModalDetail(true);
+    setSelectedCustomer(customerDataTransaction);
+    console.log(customerDataTransaction);
   };
 
   useEffect(() => {
     getTransactions();
+    getProducts();
+    getCustomers();
   }, []);
 
   return (
@@ -73,6 +143,9 @@ const Transactions = () => {
           <Button onClick={check} variant="primary">
             Cek Transaksi
           </Button>
+          <Button onClick={() => setShowModalCreate(true)}>
+            Tambah Transaksi
+          </Button>
           <Table striped bordered hover>
             <thead className="text-center">
               <tr>
@@ -83,7 +156,7 @@ const Transactions = () => {
               </tr>
             </thead>
             <tbody>
-              {Object.values(customerData).map((customer, index) => (
+              {Object.values(customerDataTransaction).map((customer, index) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
                   <td>{customer.id}</td>
@@ -107,7 +180,8 @@ const Transactions = () => {
         </div>
       </div>
 
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
+      {/* Modal Detail Transaksi */}
+      <Modal show={showModalDetail} onHide={() => setShowModalDetail(false)}>
         <Modal.Header closeButton>
           <Modal.Title>
             Riwayat Transaksi a.n {selectedCustomer?.name}
@@ -153,8 +227,65 @@ const Transactions = () => {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
+          <Button variant="secondary" onClick={() => setShowModalDetail(false)}>
             Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal Create Transaction */}
+      <Modal show={showModalCreate} onHide={() => setShowModalCreate(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Create Transaction</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Nama Konsumen</Form.Label>
+              <Form.Control
+                as="select"
+                value={selectedCustomerId}
+                onChange={(e) => setSelectedCustomerId(e.target.value)}
+              >
+                <option value="">Pilih Nama Konsumen</option>
+                {customerData.map((customer) => (
+                  <option key={customer.id} value={customer.id}>
+                    {customer.name}
+                  </option>
+                ))}
+              </Form.Control>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Pilih Paket Laundry</Form.Label>
+              <Form.Control
+                as="select"
+                value={selectedProduct}
+                onChange={(e) => setSelectedProduct(e.target.value)}
+              >
+                <option value="">Pilih Paket Laundry</option>
+                {productData.map((product) => (
+                  <option key={product.id} value={product.id}>
+                    {product.name}
+                  </option>
+                ))}
+              </Form.Control>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Qty (Kg)</Form.Label>
+              <Form.Control
+                type="number"
+                value={quantity}
+                onChange={(e) => setQuantity(Number(e.target.value))}
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModalCreate(false)}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={createTransaction}>
+            Submit
           </Button>
         </Modal.Footer>
       </Modal>

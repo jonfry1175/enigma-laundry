@@ -11,6 +11,7 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const Transactions = lazy(() =>
   import("./pages/dashboard/transactions/Transactions")
 );
+const TestPostBill = lazy(() => import("./components/TestPostBill"));
 import { axiosInstance } from "./lib/axios";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
@@ -58,6 +59,7 @@ function App() {
           <Route path="/dashboard-customers" element={<Customer />} />
           <Route path="/dashboard-products" element={<Product />} />
           <Route path="/dashboard-transaction" element={<Transactions />} />
+          <Route path="/test" element={<TestPostBill />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
