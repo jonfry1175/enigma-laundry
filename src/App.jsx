@@ -1,35 +1,68 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Toaster } from "sonner";
+import { Routes, Route } from "react-router-dom";
+import Loader from "./components/Loader";
+import { lazy, Suspense } from "react";
+const HomePage = lazy(() => import("./pages/HomePage"));
+const LoginPage = lazy(() => import("./pages/auth/LoginPage"));
+const RegisterPage = lazy(() => import("./pages/auth/RegisterPage"));
+const Customer = lazy(() => import("./pages/dashboard/customers/Customer"));
+const Product = lazy(() => import("./pages/dashboard/products/Product"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const Transactions = lazy(() =>
+  import("./pages/dashboard/transactions/Transactions")
+);
+import { axiosInstance } from "./lib/axios";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const token = useSelector((state) => state.auth.token);
+  const dispatch = useDispatch();
+
+  const refreshToken = async () => {
+    try {
+      const response = await axiosInstance.get("/auth/refresh-token", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const newToken = response.data.data.token;
+      if (response.data.status.code === 201) {
+        localStorage.setItem("token", newToken);
+        dispatch({ type: "SET_TOKEN", token: newToken });
+        console.log('token refreshed');
+      } else {
+        console.log("failed to refresh token");
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(refreshToken, 1000 * 60 * 30); // 30 menit
+    // Membersihkan interval ketika komponen unmount atau dependensi berubah
+    return () => clearInterval(intervalId);
+  }, [token, dispatch]);
+  
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Toaster position="top-center" />
+      <Suspense fallback={<Loader />}>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/dashboard-customers" element={<Customer />} />
+          <Route path="/dashboard-products" element={<Product />} />
+          <Route path="/dashboard-transaction" element={<Transactions />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
