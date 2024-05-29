@@ -45,6 +45,7 @@ const Product = () => {
       }
     } catch (error) {
       console.log(error.message);
+      toast.error("Delete Failed");
     }
   };
 
@@ -94,6 +95,7 @@ const Product = () => {
       }
     } catch (error) {
       console.log(error.message);
+      toast.error("Update Failed");
     }
   };
 

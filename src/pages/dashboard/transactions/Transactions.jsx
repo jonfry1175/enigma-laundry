@@ -115,7 +115,13 @@ const Transactions = () => {
       getTransactions();
       setShowModalCreate(false);
     } catch (error) {
-      console.log(error.message);
+      if(error?.response?.data?.status?.description) {
+        toast.error("Wajib Login Menggunakan Akun Admin");
+      } else {
+
+        console.log(error.message);
+        toast.error("Create Transaction Failed");
+      }
     }
   };
 

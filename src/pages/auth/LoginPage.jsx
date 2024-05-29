@@ -1,4 +1,4 @@
-import React, { useEffect} from "react";
+import React, { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Button, Form, Container, Row, Col } from "react-bootstrap";
 import "./style.css";
@@ -34,26 +34,26 @@ const LoginPage = () => {
       const response = await axiosInstance.post("/auth/login", data);
       const token = response.data.data.token;
 
-      if (response.data.status.code !== 201) {
-        throw new Error("Invalid username or password");
-      } else {
+      if (response.data.status.code === 201) {
         localStorage.setItem("token", token);
         dispatch({ type: "SET_TOKEN", token });
-        // console.log(`token: ${token}`);
         toast.success("Login Success");
+        navigate("/dashboard-customers");
+      } else {
+        toast.error("Invalid username or password");
       }
-      // console.log(token)
     } catch (error) {
-      console.error(error.message);
-      toast.error("Invalid username or password");
-      // console.table(error);
+      if(error.response.data.status) {
+        toast.error("invalid username or password");
+      } else {
+        toast.error("server error");
+      }
+      console.log(error.message);
     }
   };
 
   useEffect(() => {
-    if (selectorToken) {
-      navigate("/dashboard-customers");
-    }
+    toast.info("Akun Demo Role Admin, Username: admin, Password: password");
   }, [selectorToken, navigate]);
 
   return (

@@ -42,6 +42,7 @@ const CreateProductModal = ({ show, handleClose, handleCreate }) => {
         toast.error("Wajib Login Menggunakan Akun Admin");
       } else {
         console.log(error.message);
+        toast.error("Product Creation Failed");
       }
       
     }
