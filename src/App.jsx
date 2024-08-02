@@ -15,36 +15,24 @@ import { axiosInstance } from "./lib/axios";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
+import { refreshToken } from "./store/actions/authActions";
 
 function App() {
-  const token = useSelector((state) => state.auth.token);
+  const dataAuth = useSelector((state) => state.auth?.authData);
   const dispatch = useDispatch();
 
-  const refreshToken = async () => {
-    try {
-      const response = await axiosInstance.get("/auth/refresh-token", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const newToken = response.data.data.token;
-      if (response.data.status.code === 201) {
-        localStorage.setItem("token", newToken);
-        dispatch({ type: "SET_TOKEN", token: newToken });
-        console.log('token refreshed');
-      } else {
-        console.log("failed to refresh token");
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
+ 
 
   useEffect(() => {
-    const intervalId = setInterval(refreshToken, 1000 * 60 * 30); // 30 menit
-    // Membersihkan interval ketika komponen unmount atau dependensi berubah
-    return () => clearInterval(intervalId);
-  }, [token, dispatch]);
+    if (dataAuth?.token) {
+      const timeoutId = setTimeout(() => {
+        dispatch(refreshToken());
+      }, 1000 * 60 * 30); // refresh token setelah 30 menit
+  
+      // Membersihkan timeout saat komponen dibongkar atau token berubah
+      return () => clearTimeout(timeoutId);
+    }
+  }, [dataAuth?.token, dispatch]);
   
 
   return (

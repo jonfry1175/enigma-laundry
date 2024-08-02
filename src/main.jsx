@@ -9,11 +9,11 @@ import 'react-confirm-alert/src/react-confirm-alert.css'
 
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
-import {createStore} from "redux"
+import {createStore, applyMiddleware} from "redux"
 import { reducers } from "./store/store.js";
+import { thunk } from "redux-thunk";
 
-const store = createStore(reducers)
-
+const store = createStore(reducers, applyMiddleware(thunk));
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Provider store={store}>

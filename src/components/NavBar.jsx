@@ -8,16 +8,12 @@ import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 
 const NavBar = () => {
-  const navigate = useNavigate();
-  const isAuth = useSelector((state) => state.auth.isAuthenticated);
+  const isAuth = useSelector((state) => state.auth.authData);
   const dispatch = useDispatch();
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
     dispatch({ type: "LOGOUT" });
     toast.success("Logout Success");
-    navigate("/");
-
   };
 
   const handleDeleteClick = () => {
