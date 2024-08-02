@@ -1,7 +1,4 @@
-import React, {useEffect} from "react";
 import { Navbar, Container, Nav , Button} from "react-bootstrap";
-import doneImg from '../assets/done.svg'
-import environmentImg from '../assets/environment.svg'
 import logo from '../assets/logo.svg'
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";

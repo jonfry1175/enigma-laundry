@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./sidebar.css";
-import { Link , useNavigate} from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import { confirmAlert} from 'react-confirm-alert'
 import { toast } from "sonner";
@@ -8,7 +8,6 @@ import { useDispatch } from "react-redux";
 
 const Sidebar = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(true);
 
   const toggleSidebar = () => {
@@ -16,11 +15,10 @@ const Sidebar = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    dispatch({ type: "LOGOUT" });
     toast.success("Logout Success");
-    navigate("/");
-
+    setTimeout(() => {
+      dispatch({ type: "LOGOUT" });
+    }, 1000);
   };
 
   const handleDeleteClick = () => {

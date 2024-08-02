@@ -1,4 +1,3 @@
-import React from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -11,7 +10,7 @@ const CreateProductModal = ({ show, handleClose, handleCreate }) => {
     price: "",
     type: "",
   });
-  const token = useSelector((state) => state.auth.token);
+  const token = useSelector((state) => state.auth.authData.token);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

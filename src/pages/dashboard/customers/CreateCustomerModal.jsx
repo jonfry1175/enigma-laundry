@@ -1,4 +1,3 @@
-import React from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -12,7 +11,7 @@ const CreateCustomerModal = ({ show, handleClose, handleCreate }) => {
     address: "",
   });
 
-  const token = useSelector((state) => state.auth.token);
+  const token = useSelector((state) => state.auth.authData.token);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -37,7 +36,8 @@ const CreateCustomerModal = ({ show, handleClose, handleCreate }) => {
         handleClose(); // Close the modal after successful creation
       }
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
+      toast.error("server error");
     }
   };
 

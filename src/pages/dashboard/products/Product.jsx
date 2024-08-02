@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Sidebar from "../../../components/Sidebar";
 import { useEffect } from "react";
 import { axiosInstance } from "../../../lib/axios";
@@ -7,8 +7,8 @@ import { toast } from "sonner";
 import { confirmAlert } from "react-confirm-alert";
 import CreateProductModal from "./CreateProductModal";
 import EditProductModal from "./EditProductModal";
-import withAuth from "../../../hoc/withAuth";
 import { useSelector } from "react-redux";
+import { IsAuth } from "../../../hoc/checkAuth";
 
 const Product = () => {
   const [productData, setProductData] = useState([]);
@@ -16,7 +16,7 @@ const Product = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
-  const token = useSelector((state) => state.auth.token);
+  const token = useSelector((state) => state.auth.authData.token);
 
   const getProducts = async () => {
     try {
@@ -169,4 +169,4 @@ const Product = () => {
   );
 };
 
-export default withAuth(Product);
+export default IsAuth(Product);

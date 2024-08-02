@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Sidebar from "../../../components/Sidebar";
-import { Button, Table, Modal, ListGroup, Form } from "react-bootstrap";
+import { Button, Table, Modal, Form } from "react-bootstrap";
 import { axiosInstance } from "../../../lib/axios";
-import withAuth from "../../../hoc/withAuth";
 import { useSelector } from "react-redux";
-import axios from "axios";
 import { toast } from "sonner";
+import { IsAuth } from "../../../hoc/checkAuth";
 
 
 const Transactions = () => {
@@ -19,7 +18,7 @@ const Transactions = () => {
   const [quantity, setQuantity] = useState(0);
   const [selectedProduct, setSelectedProduct] = useState("");
 
-  const token = useSelector((state) => state.auth.token);
+  const token = useSelector((state) => state.auth.authData.token);
 
   const getTransactions = async () => {
     try {
@@ -299,4 +298,4 @@ const Transactions = () => {
   );
 };
 
-export default withAuth(Transactions);
+export default IsAuth(Transactions);

@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { Button, Form, Container, Row, Col } from "react-bootstrap";
 import "./style.css";
 import { Link, useNavigate } from "react-router-dom";
@@ -7,6 +6,7 @@ import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
+import { NotAuth } from "../../hoc/checkAuth";
 
 const validateForm = z.object({
   name: z.string().min(1, "Nama tidak boleh kosong"),
@@ -17,7 +17,7 @@ const validateForm = z.object({
 
 const RegisterPage = () => {
   const navigate = useNavigate();
-  const form = useForm({
+  const { control, handleSubmit, formState: { isValid } } = useForm({
     defaultValues: {
       name: "",
       email: "",
@@ -25,6 +25,7 @@ const RegisterPage = () => {
       password: "",
     },
     resolver: zodResolver(validateForm),
+    mode: "onChange",
   });
 
   const registerUser = async (data) => {
@@ -32,8 +33,11 @@ const RegisterPage = () => {
       const userData = {...data, role: "employee"}
       const response = await axiosInstance.post("/auth/register", userData);
       toast.success("Register Success");
-      navigate("/login");
-
+      if(response.status === 201) {
+        setTimeout(() => {
+          navigate("/login");
+        }, 1000);
+      }
     } catch (error) {
       console.error(error.message);
       toast.error("Register Failed");
@@ -48,11 +52,11 @@ const RegisterPage = () => {
             <div className="text-center mb-4">
               <h2>Daftar Akun Baru</h2>
             </div>
-            <Form onSubmit={form.handleSubmit(registerUser)}>
+            <Form onSubmit={handleSubmit(registerUser)}>
               <Form.Group className="mb-3" controlId="formBasicName">
                 <Form.Label>Nama</Form.Label>
                 <Controller
-                  control={form.control}
+                  control={control}
                   name="name"
                   render={({ field, fieldState }) => (
                     <div>
@@ -73,7 +77,7 @@ const RegisterPage = () => {
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Email</Form.Label>
                 <Controller
-                  control={form.control}
+                  control={control}
                   name="email"
                   render={({ field, fieldState }) => (
                     <div>
@@ -94,7 +98,7 @@ const RegisterPage = () => {
               <Form.Group className="mb-3" controlId="formBasicUsername">
                 <Form.Label>Username</Form.Label>
                 <Controller
-                  control={form.control}
+                  control={control}
                   name="username"
                   render={({ field, fieldState }) => (
                     <div>
@@ -115,7 +119,7 @@ const RegisterPage = () => {
               <Form.Group className="mb-3" controlId="formBasicPassword">
                 <Form.Label>Password</Form.Label>
                 <Controller
-                  control={form.control}
+                  control={control}
                   name="password"
                   render={({ field, fieldState }) => (
                     <div>
@@ -133,7 +137,7 @@ const RegisterPage = () => {
                 />
               </Form.Group>
 
-              <Button variant="primary" type="submit" className="w-100 mb-3">
+              <Button variant="primary" type="submit" className="w-100 mb-3" disabled={!isValid}>
                 Daftar
               </Button>
 
@@ -150,4 +154,4 @@ const RegisterPage = () => {
   );
 };
 
-export default RegisterPage;
+export default NotAuth(RegisterPage);

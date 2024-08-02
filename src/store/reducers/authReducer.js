@@ -1,17 +1,16 @@
-const valToken = localStorage.getItem("token");
-
 const DEFAULT_STATE = {
-    token: valToken,
-    isAuthenticated: !!valToken, // Convert token to boolean
+    authData: JSON.parse(localStorage.getItem("authData")) || null,
 };
 
 
     export const authReducer = (state = DEFAULT_STATE, action) => {
     switch (action.type) {
         case "SET_TOKEN":
-            return { ...state, token: action.token, isAuthenticated: true };
+            localStorage.setItem("authData", JSON.stringify(action.payload.authData));
+            return { ...state, authData: action.payload.authData};
         case "LOGOUT":
-            return { ...state, token: null, isAuthenticated: false }
+            localStorage.removeItem("authData");
+            return { ...state, authData: null}
         case "CHECK_AUTH_STATUS":
             return {
                 ...state,

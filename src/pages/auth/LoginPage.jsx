@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Button, Form, Container, Row, Col } from "react-bootstrap";
 import "./style.css";
@@ -6,10 +6,11 @@ import { Link } from "react-router-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { axiosInstance } from "../../lib/axios";
-import axios from "axios";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
+import { login } from "../../store/actions/authActions";
+import { NotAuth } from "../../hoc/checkAuth";
+import { jwtDecode } from "jwt-decode";
 
 const validateForm = z.object({
   username: z.string().min(5, "Username must be at least 5 characters"),
@@ -17,28 +18,29 @@ const validateForm = z.object({
 });
 
 const LoginPage = () => {
-  const selectorToken = useSelector((state) => state.auth.token);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
-  const form = useForm({
+  const { control, handleSubmit, formState: { isValid } } = useForm({
     defaultValues: {
       username: "",
       password: "",
     },
     resolver: zodResolver(validateForm),
+    mode: "onChange",
   });
 
   const LoginUser = async (data) => {
     try {
       const response = await axiosInstance.post("/auth/login", data);
       const token = response.data.data.token;
+      const decoded = jwtDecode(token);
+      const combined = { ...decoded, token };
 
       if (response.data.status.code === 201) {
-        localStorage.setItem("token", token);
-        dispatch({ type: "SET_TOKEN", token });
         toast.success("Login Success");
-        navigate("/dashboard-customers");
+        setTimeout(() => {
+          dispatch(login(combined));
+        }, 1000);
       } else {
         toast.error("Invalid username or password");
       }
@@ -54,7 +56,7 @@ const LoginPage = () => {
 
   useEffect(() => {
     toast.info("Akun Demo Role Admin, Username: admin, Password: password");
-  }, [selectorToken, navigate]);
+  }, []);
 
   return (
     <div className="d-flex align-items-center justify-content-center vh-100 bg-light login-page">
@@ -64,11 +66,11 @@ const LoginPage = () => {
             <div className="text-center mb-4">
               <h2>Masuk Dashboard</h2>
             </div>
-            <Form onSubmit={form.handleSubmit(LoginUser)}>
+            <Form onSubmit={handleSubmit(LoginUser)}>
               <Form.Group className="mb-3" controlId="formBasicUsername">
                 <Form.Label>Username</Form.Label>
                 <Controller
-                  control={form.control}
+                  control={control}
                   name="username"
                   render={({ field, fieldState }) => {
                     return (
@@ -91,7 +93,7 @@ const LoginPage = () => {
               <Form.Group className="mb-3" controlId="formBasicPassword">
                 <Form.Label>Kata Sandi</Form.Label>
                 <Controller
-                  control={form.control}
+                  control={control}
                   name="password"
                   render={({ field, fieldState }) => {
                     return (
@@ -111,7 +113,7 @@ const LoginPage = () => {
                 />
               </Form.Group>
 
-              <Button variant="primary" type="submit" className="w-100 mb-3">
+              <Button variant="primary" type="submit" className="w-100 mb-3" disabled={!isValid}>
                 Masuk
               </Button>
 
@@ -131,4 +133,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default NotAuth(LoginPage);

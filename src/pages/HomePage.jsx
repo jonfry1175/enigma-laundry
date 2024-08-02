@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import NavBar from "../components/NavBar";
 import "../App.css";
 import adventure from "../assets/adventure.svg";
@@ -10,11 +10,9 @@ import Footer from "../components/Footer";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useEffect } from "react";
-import { Button } from "react-bootstrap";
 
 const HomePage = () => {
-  const isAuth = useSelector((state) => state.auth.isAuthenticated);
+  const isAuth = useSelector((state) => state.auth.authData);
   const navigate = useNavigate();
   const [inputPromo, setInputPromo] = useState("");
 
@@ -31,10 +29,6 @@ const HomePage = () => {
     navigate("/dashboard-customers");
   }
 
-  const token = useSelector((state) => state.auth.token);
-  const cekTokenRedux = () => {
-    console.log(token)
-  };
 
   return (
     <div>
@@ -58,7 +52,6 @@ const HomePage = () => {
               <button onClick={handleServices} className="btn btn-primary btn-lg">
                 {isAuth ? "Buka Dashboard" : "Telusuri Layanan"}
               </button>
-              <Button onClick={cekTokenRedux}>Cek redux</Button>
             </div>
             <img
               className="img-fluid w-50 d-none d-sm-block"
