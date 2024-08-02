@@ -2,15 +2,18 @@ import { useState, useEffect } from "react";
 import Sidebar from "../../../components/Sidebar";
 import { Button, Table, Modal, Form } from "react-bootstrap";
 import { axiosInstance } from "../../../lib/axios";
-import { useSelector } from "react-redux";
 import { toast } from "sonner";
 import { IsAuth } from "../../../hoc/checkAuth";
+import { useDispatch, useSelector } from "react-redux";
+import { setProducts, setCustomers, setTransactions } from "../../../store/actions/dataActions";
 
 
 const Transactions = () => {
-  const [customerDataTransaction, setCustomerDataTransaction] = useState([]);
-  const [productData, setProductData] = useState([]);
-  const [customerData, setCustomerData] = useState([]);
+  const dispatch = useDispatch();
+  const transactions = useSelector((state) => state.data.transactions);
+  const customers = useSelector((state) => state.data.customers);
+  const products = useSelector((state) => state.data.products);
+
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [showModalDetail, setShowModalDetail] = useState(false);
   const [showModalCreate, setShowModalCreate] = useState(false);
@@ -47,8 +50,7 @@ const Transactions = () => {
         newCustomerDataTransaction[customerId].transactionCount += 1;
       });
 
-      setCustomerDataTransaction(newCustomerDataTransaction);
-      console.log(token);
+      dispatch(setTransactions(newCustomerDataTransaction));
       console.log(response.data.data);
     } catch (error) {
       console.log(error.message);
@@ -56,7 +58,7 @@ const Transactions = () => {
   };
 
   const check = () => {
-    console.log(customerDataTransaction);
+    console.log(transactions);
   };
 
   // get product data
@@ -66,7 +68,7 @@ const Transactions = () => {
         Authorization: `Bearer ${token}`,
       };
       const response = await axiosInstance.get("/products", { headers });
-      setProductData(response.data.data);
+      dispatch(setProducts(response.data.data));
     } catch (error) {
       console.log(error.message);
     }
@@ -79,7 +81,7 @@ const Transactions = () => {
         Authorization: `Bearer ${token}`,
       };
       const response = await axiosInstance.get("/customers", { headers });
-      setCustomerData(response.data.data);
+      dispatch(setCustomers(response.data.data));
     } catch (error) {
       console.log(error.message);
     }
@@ -161,7 +163,7 @@ const Transactions = () => {
               </tr>
             </thead>
             <tbody>
-              {Object.values(customerDataTransaction).map((customer, index) => (
+              {Object.values(transactions).map((customer, index) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
                   <td>{customer.id}</td>
@@ -253,7 +255,7 @@ const Transactions = () => {
                 onChange={(e) => setSelectedCustomerId(e.target.value)}
               >
                 <option value="">Pilih Nama Konsumen</option>
-                {customerData.map((customer) => (
+                {customers.map((customer) => (
                   <option key={customer.id} value={customer.id}>
                     {customer.name}
                   </option>
@@ -268,7 +270,7 @@ const Transactions = () => {
                 onChange={(e) => setSelectedProduct(e.target.value)}
               >
                 <option value="">Pilih Paket Laundry</option>
-                {productData.map((product) => (
+                {products.map((product) => (
                   <option key={product.id} value={product.id}>
                     {product.name}
                   </option>

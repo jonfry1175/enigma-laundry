@@ -9,9 +9,12 @@ import CreateCustomerModal from "./CreateCustomerModal";
 import Sidebar from "../../../components/Sidebar";
 import { useSelector } from "react-redux";
 import { IsAuth } from "../../../hoc/checkAuth";
+import { setCustomers } from "../../../store/actions/dataActions";
+import { useDispatch } from "react-redux";
 
 const Customer = () => {
-  const [customerData, setCustomerData] = useState([]);
+  const dispatch = useDispatch();
+  const customers = useSelector((state) => state.data.customers);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false); // State to control the visibility of the Create Customer modal
@@ -24,7 +27,7 @@ const Customer = () => {
         Authorization: `Bearer ${token}`,
       };
       const response = await axiosInstance.get("/customers", { headers });
-      setCustomerData(response.data.data);
+      dispatch(setCustomers(response.data.data));
     } catch (error) {
       console.log(error.message);
     }
@@ -90,7 +93,6 @@ const Customer = () => {
   };
 
   const handleCreateCustomer = (newCustomer) => {
-    setCustomerData([...customerData, newCustomer]); // Add the newly created customer to the customerData array
     getCustomers();
   };
 
@@ -120,7 +122,7 @@ const Customer = () => {
                 </tr>
               </thead>
               <tbody>
-                {customerData.map((customer, index) => (
+                {customers.map((customer, index) => (
                   <tr key={index}>
                     <td>{index + 1}</td>
                     <td>{customer.name}</td>

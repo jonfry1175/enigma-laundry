@@ -9,9 +9,12 @@ import CreateProductModal from "./CreateProductModal";
 import EditProductModal from "./EditProductModal";
 import { useSelector } from "react-redux";
 import { IsAuth } from "../../../hoc/checkAuth";
+import { useDispatch } from "react-redux";
+import { setProducts } from "../../../store/actions/dataActions";
 
 const Product = () => {
-  const [productData, setProductData] = useState([]);
+  const dispatch = useDispatch();
+  const products = useSelector((state) => state.data.products);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -25,7 +28,7 @@ const Product = () => {
       };
 
       const response = await axiosInstance.get("/products", { headers });
-      setProductData(response.data.data);
+      dispatch(setProducts(response.data.data));
       console.log(token);
     } catch (error) {
       console.log(error.message);
@@ -71,7 +74,6 @@ const Product = () => {
   };
 
   const handleCreateProduct = (newProduct) => {
-    setProductData([...productData, newProduct]);
     getProducts();
   };
 
@@ -124,7 +126,7 @@ const Product = () => {
               </tr>
             </thead>
             <tbody>
-              {productData.map((product, index) => (
+              {products.map((product, index) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
                   <td>{product.name}</td>
