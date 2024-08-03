@@ -45,7 +45,7 @@ const LoginPage = () => {
         toast.error("Invalid username or password");
       }
     } catch (error) {
-      if(error?.response?.data?.status) {
+      if (error?.response?.data?.status) {
         toast.error("invalid username or password");
       } else {
         toast.error("server error");
@@ -112,10 +112,11 @@ const LoginPage = () => {
                   }}
                 />
               </Form.Group>
-
-              <Button variant="primary" type="submit" className="w-100 mb-3" disabled={!isValid}>
-                Masuk
-              </Button>
+              <span className="disabled-cursor">
+                <Button variant="primary" type="submit" className="w-100 mb-3" disabled={!isValid}>
+                  Masuk
+                </Button>
+              </span>
 
               <div className="text-center">
                 <a href="#" className="d-block mb-2">

@@ -5,10 +5,12 @@ import { Button } from "react-bootstrap";
 import { confirmAlert} from 'react-confirm-alert'
 import { toast } from "sonner";
 import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 const Sidebar = () => {
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(true);
+  const role = useSelector((state) => state.auth.authData.role);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -97,7 +99,7 @@ const Sidebar = () => {
           href="#"
         >
           <i className="bi bi-person-circle"></i>
-          <span className="ms-2">User</span>
+          <span className="ms-2">{role[0].toUpperCase() + role.slice(1)}</span>
         </a>
         <div className="dropdown-menu" aria-labelledby="triggerId">
           <Link to={"/"} className="dropdown-item">
@@ -110,7 +112,9 @@ const Sidebar = () => {
           </Button>
         </div>
       </div>
+      
     </div>
+    
   );
 };
 

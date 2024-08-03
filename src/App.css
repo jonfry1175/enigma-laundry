@@ -1,3 +1,7 @@
 #services img{
   height: 150px;
 }
+
+.disabled-cursor {
+  cursor: not-allowed !important;
+}

@@ -1,3 +1,4 @@
+import "./App.css";
 import { Toaster } from "sonner";
 import { Routes, Route } from "react-router-dom";
 import Loader from "./components/Loader";
@@ -11,7 +12,6 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const Transactions = lazy(() =>
   import("./pages/dashboard/transactions/Transactions")
 );
-import { axiosInstance } from "./lib/axios";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";

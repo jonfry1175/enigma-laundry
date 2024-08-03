@@ -30,10 +30,10 @@ const RegisterPage = () => {
 
   const registerUser = async (data) => {
     try {
-      const userData = {...data, role: "employee"}
+      const userData = { ...data, role: "employee" }
       const response = await axiosInstance.post("/auth/register", userData);
       toast.success("Register Success");
-      if(response.status === 201) {
+      if (response.status === 201) {
         setTimeout(() => {
           navigate("/login");
         }, 1000);
@@ -136,11 +136,11 @@ const RegisterPage = () => {
                   )}
                 />
               </Form.Group>
-
-              <Button variant="primary" type="submit" className="w-100 mb-3" disabled={!isValid}>
-                Daftar
-              </Button>
-
+              <span className="disabled-cursor">
+                <Button variant="primary" type="submit" className="w-100 mb-3" disabled={!isValid}>
+                  Daftar
+                </Button>
+              </span>
               <div className="text-center">
                 <Link to={"/login"} className="d-block mb-2">
                   Sudah punya akun? Masuk

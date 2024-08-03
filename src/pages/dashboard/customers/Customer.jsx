@@ -4,7 +4,7 @@ import { Button, Table } from "react-bootstrap";
 import { axiosInstance } from "../../../lib/axios";
 import { toast } from "sonner";
 import { confirmAlert } from "react-confirm-alert";
-import EditCustomerModal from "./EditCustomerModal"; 
+import EditCustomerModal from "./EditCustomerModal";
 import CreateCustomerModal from "./CreateCustomerModal";
 import Sidebar from "../../../components/Sidebar";
 import { useSelector } from "react-redux";
@@ -39,13 +39,14 @@ const Customer = () => {
         Authorization: `Bearer ${token}`,
       };
       const result = await axiosInstance.delete(`/customers/${id}`, { headers });
-      
-      if(result.status === 204) {
+
+      if (result.status === 204) {
         toast.success("Delete Success");
         getCustomers();
       }
     } catch (error) {
-        console.log(error.message)
+      toast.error("Delete Failed");
+      console.log(error.message)
     }
   }
 
@@ -60,7 +61,7 @@ const Customer = () => {
         },
         {
           label: 'No',
-          onClick: () => {}
+          onClick: () => { }
         }
       ]
     });
@@ -77,7 +78,7 @@ const Customer = () => {
         Authorization: `Bearer ${token}`,
       };
       const result = await axiosInstance.put(`/customers/`, updatedData, { headers });
-      
+
       if (result.status === 200) {
         toast.success("Update Success");
         getCustomers();
@@ -129,15 +130,21 @@ const Customer = () => {
                     <td>{customer.phoneNumber}</td>
                     <td>{customer.address}</td>
                     <td>
-                      <Button 
+                      <Button
                         onClick={() => handleEditClick(customer)}
                         variant="success"
                         className="mx-2">Edit</Button>
-                      <Button 
+                      <span className="disabled-cursor">
+                      <Button
                         onClick={() => handleDeleteClick(customer.id)}
                         variant="danger"
                         className="mx-2"
-                        disabled={index === 0 || index === 1}>Delete</Button>
+                        disabled={index === 0 || index === 1}
+                      >
+                        Delete
+                      </Button>
+                      </span>
+
                     </td>
                   </tr>
                 ))}
@@ -157,7 +164,7 @@ const Customer = () => {
         />
       )}
 
-       <CreateCustomerModal
+      <CreateCustomerModal
         show={showCreateModal}
         handleClose={() => setShowCreateModal(false)}
         handleCreate={handleCreateCustomer}

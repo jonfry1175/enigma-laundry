@@ -103,7 +103,6 @@ const Product = () => {
 
   useEffect(() => {
     getProducts();
-    console.log(role);
   }, []);
   return (
     <div>
@@ -139,6 +138,7 @@ const Product = () => {
                     variant="success" className="mx-2">
                       Edit
                     </Button>
+                    <span className="disabled-cursor">
                     <Button
                       onClick={() => handleDeleteClick(product.id)}
                       variant="danger"
@@ -147,6 +147,7 @@ const Product = () => {
                     >
                       Delete
                     </Button>
+                    </span>
                   </td>
                 </tr>
               ))}
