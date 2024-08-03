@@ -20,6 +20,7 @@ const Product = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
 
   const token = useSelector((state) => state.auth.authData.token);
+  const role = useSelector((state) => state.auth.authData.role);
 
   const getProducts = async () => {
     try {
@@ -29,7 +30,6 @@ const Product = () => {
 
       const response = await axiosInstance.get("/products", { headers });
       dispatch(setProducts(response.data.data));
-      console.log(token);
     } catch (error) {
       console.log(error.message);
     }
@@ -103,6 +103,7 @@ const Product = () => {
 
   useEffect(() => {
     getProducts();
+    console.log(role);
   }, []);
   return (
     <div>
@@ -112,7 +113,7 @@ const Product = () => {
         </div>
         <div className="col">
           <h1 className="text-center">Product</h1>
-          <Button onClick={handleCreateClick} variant="primary">
+          <Button onClick={handleCreateClick} variant="primary" className={role === "admin" ? "" : "d-none"}>
             Add Product
           </Button>
           <Table striped bordered hover>
@@ -142,6 +143,7 @@ const Product = () => {
                       onClick={() => handleDeleteClick(product.id)}
                       variant="danger"
                       className="mx-2"
+                      disabled={index === 0 || index === 1}
                     >
                       Delete
                     </Button>

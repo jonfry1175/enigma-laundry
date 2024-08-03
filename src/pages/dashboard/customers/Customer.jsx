@@ -136,7 +136,8 @@ const Customer = () => {
                       <Button 
                         onClick={() => handleDeleteClick(customer.id)}
                         variant="danger"
-                        className="mx-2">Delete</Button>
+                        className="mx-2"
+                        disabled={index === 0 || index === 1}>Delete</Button>
                     </td>
                   </tr>
                 ))}

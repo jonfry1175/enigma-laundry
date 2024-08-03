@@ -13,6 +13,7 @@ const Transactions = () => {
   const transactions = useSelector((state) => state.data.transactions);
   const customers = useSelector((state) => state.data.customers);
   const products = useSelector((state) => state.data.products);
+  const role = useSelector((state) => state.auth.authData.role);
 
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [showModalDetail, setShowModalDetail] = useState(false);
@@ -105,7 +106,6 @@ const Transactions = () => {
         ],
       };
       const response = await axiosInstance.post("/bills", payload, { headers });
-      // const response = await axios.post("http://localhost:8010/api/v1/bills/", payload, { headers });
       if(response.status === 201) {
         toast.success("Transaction Created Successfully");
       } else {
@@ -117,9 +117,8 @@ const Transactions = () => {
       setShowModalCreate(false);
     } catch (error) {
       if(error?.response?.data?.status?.description) {
-        toast.error("Wajib Login Menggunakan Akun Admin");
+        toast.error("Data Tidak Valid");
       } else {
-
         console.log(error.message);
         toast.error("Create Transaction Failed");
       }
@@ -150,7 +149,7 @@ const Transactions = () => {
           <Button onClick={check} variant="primary">
             Cek Transaksi
           </Button>
-          <Button onClick={() => setShowModalCreate(true)}>
+          <Button onClick={() => setShowModalCreate(true)} className={role === "admin" ? "" : "d-none"} variant="primary">
             Tambah Transaksi
           </Button>
           <Table striped bordered hover>
@@ -254,9 +253,9 @@ const Transactions = () => {
                 value={selectedCustomerId}
                 onChange={(e) => setSelectedCustomerId(e.target.value)}
               >
-                <option value="">Pilih Nama Konsumen</option>
-                {customers.map((customer) => (
-                  <option key={customer.id} value={customer.id}>
+                <option value="" disabled={true}>Pilih Nama Konsumen</option>
+                {customers.map((customer, index) => (
+                  <option key={customer.id} value={customer.id} disabled={index > 1}>
                     {customer.name}
                   </option>
                 ))}
@@ -269,9 +268,9 @@ const Transactions = () => {
                 value={selectedProduct}
                 onChange={(e) => setSelectedProduct(e.target.value)}
               >
-                <option value="">Pilih Paket Laundry</option>
-                {products.map((product) => (
-                  <option key={product.id} value={product.id}>
+                <option value="" disabled={true}>Pilih Paket Laundry</option>
+                {products.map((product, index) => (
+                  <option key={product.id} value={product.id} disabled={index > 1}>
                     {product.name}
                   </option>
                 ))}
