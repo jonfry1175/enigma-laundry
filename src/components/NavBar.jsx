@@ -2,7 +2,6 @@ import { Navbar, Container, Nav , Button} from "react-bootstrap";
 import logo from '../assets/logo.svg'
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import {toast} from 'sonner'
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
@@ -19,7 +18,7 @@ const NavBar = () => {
   const handleDeleteClick = () => {
     confirmAlert({
       title: 'Confirm to Logout',
-      message: 'Apakah kamu yakin untuk keluar?',
+      message: 'Are you sure you want to logout?',
       buttons: [
         {
           label: 'Yes',

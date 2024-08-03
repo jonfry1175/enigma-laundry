@@ -6,12 +6,11 @@ import { lazy, Suspense } from "react";
 const HomePage = lazy(() => import("./pages/HomePage"));
 const LoginPage = lazy(() => import("./pages/auth/LoginPage"));
 const RegisterPage = lazy(() => import("./pages/auth/RegisterPage"));
-const Customer = lazy(() => import("./pages/dashboard/customers/Customer"));
-const Product = lazy(() => import("./pages/dashboard/products/Product"));
+const Customer = lazy(() => import("./pages/dashboard/Customer"));
+const Product = lazy(() => import("./pages/dashboard/Product"));
 const NotFound = lazy(() => import("./pages/NotFound"));
-const Transactions = lazy(() =>
-  import("./pages/dashboard/transactions/Transactions")
-);
+const Transactions = lazy(() => import("./pages/dashboard/Transactions"));
+
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -21,19 +20,15 @@ function App() {
   const dataAuth = useSelector((state) => state.auth?.authData);
   const dispatch = useDispatch();
 
- 
-
   useEffect(() => {
     if (dataAuth?.token) {
       const timeoutId = setTimeout(() => {
         dispatch(refreshToken());
       }, 1000 * 60 * 30); // refresh token setelah 30 menit
-  
       // Membersihkan timeout saat komponen dibongkar atau token berubah
       return () => clearTimeout(timeoutId);
     }
   }, [dataAuth?.token, dispatch]);
-  
 
   return (
     <>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 
-const EditProductModal = ({ show, handleClose, product, handleSave }) => {
+const EditProductModal = ({ handleClose, product, handleSave }) => {
   const [formData, setFormData] = useState({
     id: "",
     name: '',
@@ -34,7 +34,7 @@ const EditProductModal = ({ show, handleClose, product, handleSave }) => {
   };
 
   return (
-    <Modal show={show} onHide={handleClose}>
+    <>
       <Modal.Header closeButton>
         <Modal.Title>Edit Product</Modal.Title>
       </Modal.Header>
@@ -77,7 +77,7 @@ const EditProductModal = ({ show, handleClose, product, handleSave }) => {
           </Modal.Footer>
         </Form>
       </Modal.Body>
-    </Modal>
+      </>
   );
 };
 

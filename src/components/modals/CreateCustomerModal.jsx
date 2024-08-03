@@ -1,42 +1,52 @@
-import { useState, useEffect } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import { Modal, Button, Form } from "react-bootstrap";
+import { useState } from "react";
+import { toast } from "sonner";
+import { useSelector } from "react-redux";
+import { axiosInstance } from "../../lib/axios";
 
-const EditCustomerModal = ({ show, handleClose, customer, handleSave }) => {
+const CreateCustomer = ({ handleClose, fetchCustomers }) => {
   const [formData, setFormData] = useState({
-    id: "",
-    name: '',
-    phoneNumber: '',
-    address: ''
+    name: "",
+    phoneNumber: "",
+    address: "",
   });
 
-  useEffect(() => {
-    if (customer) {
-      setFormData({
-        id: customer.id,
-        name: customer.name,
-        phoneNumber: customer.phoneNumber,
-        address: customer.address
-      });
-    }
-  }, [customer]);
+  const token = useSelector((state) => state.auth.authData.token);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value
+      [name]: value,
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    handleSave(customer.id, formData);
+    try {
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+      const response = await axiosInstance.post("/customers/", formData, {
+        headers,
+      });
+      if (response.status === 201) {
+        toast.success("Customer Created Successfully");
+        fetchCustomers(); // Pass newly created customer data to the parent component
+        setTimeout(() => {
+          handleClose();
+        }, 500);
+      }
+    } catch (error) {
+      console.log(error.message);
+      toast.error("server error");
+    }
   };
 
   return (
-    <Modal show={show} onHide={handleClose}>
+    <>
       <Modal.Header closeButton>
-        <Modal.Title>Edit Customer</Modal.Title>
+        <Modal.Title>Create Customer</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit}>
@@ -47,6 +57,7 @@ const EditCustomerModal = ({ show, handleClose, customer, handleSave }) => {
               name="name"
               value={formData.name}
               onChange={handleChange}
+              required
             />
           </Form.Group>
           <Form.Group controlId="formPhoneNumber" className="mt-3">
@@ -56,6 +67,7 @@ const EditCustomerModal = ({ show, handleClose, customer, handleSave }) => {
               name="phoneNumber"
               value={formData.phoneNumber}
               onChange={handleChange}
+              required
             />
           </Form.Group>
           <Form.Group controlId="formAddress" className="mt-3">
@@ -65,6 +77,7 @@ const EditCustomerModal = ({ show, handleClose, customer, handleSave }) => {
               name="address"
               value={formData.address}
               onChange={handleChange}
+              required
             />
           </Form.Group>
           <Modal.Footer>
@@ -72,13 +85,13 @@ const EditCustomerModal = ({ show, handleClose, customer, handleSave }) => {
               Close
             </Button>
             <Button variant="primary" type="submit">
-              Save Changes
+              Create
             </Button>
           </Modal.Footer>
         </Form>
       </Modal.Body>
-    </Modal>
+      </>
   );
 };
 
-export default EditCustomerModal;
+export default CreateCustomer;

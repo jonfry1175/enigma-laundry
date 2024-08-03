@@ -26,7 +26,7 @@ const Sidebar = () => {
   const handleDeleteClick = () => {
     confirmAlert({
       title: 'Confirm to Logout',
-      message: 'Apakah kamu yakin untuk keluar?',
+      message: 'Are you sure you want to logout?',
       buttons: [
         {
           label: 'Yes',

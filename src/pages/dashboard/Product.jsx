@@ -1,16 +1,14 @@
-import { useState } from "react";
-import Sidebar from "../../../components/Sidebar";
-import { useEffect } from "react";
-import { axiosInstance } from "../../../lib/axios";
-import { Table, Button } from "react-bootstrap";
+import { useState, useEffect } from "react";
+import Sidebar from "../../components/Sidebar";
+import { axiosInstance } from "../../lib/axios";
+import { Table, Button, Modal } from "react-bootstrap";
 import { toast } from "sonner";
 import { confirmAlert } from "react-confirm-alert";
-import CreateProductModal from "./CreateProductModal";
-import EditProductModal from "./EditProductModal";
-import { useSelector } from "react-redux";
-import { IsAuth } from "../../../hoc/checkAuth";
-import { useDispatch } from "react-redux";
-import { setProducts } from "../../../store/actions/dataActions";
+import { useSelector, useDispatch } from "react-redux";
+import { IsAuth } from "../../hoc/checkAuth";
+import { setProducts } from "../../store/actions/dataActions";
+import CreateProductModal from "../../components/modals/CreateProductModal";
+import EditProductModal from "../../components/modals/EditProductModal";
 
 const Product = () => {
   const dispatch = useDispatch();
@@ -63,7 +61,7 @@ const Product = () => {
         },
         {
           label: "No",
-          onClick: () => {},
+          onClick: () => { },
         },
       ],
     });
@@ -111,7 +109,7 @@ const Product = () => {
           <Sidebar />
         </div>
         <div className="col">
-          <h1 className="text-center">Product</h1>
+          <h1 className="text-center">Product List</h1>
           <Button onClick={handleCreateClick} variant="primary" className={role === "admin" ? "" : "d-none"}>
             Add Product
           </Button>
@@ -133,20 +131,20 @@ const Product = () => {
                   <td>{product.price}</td>
                   <td>{product.type}</td>
                   <td>
-                    <Button 
-                    onClick={() => handleEditClick(product)}
-                    variant="success" className="mx-2">
+                    <Button
+                      onClick={() => handleEditClick(product)}
+                      variant="success" className="mx-2">
                       Edit
                     </Button>
                     <span className="disabled-cursor">
-                    <Button
-                      onClick={() => handleDeleteClick(product.id)}
-                      variant="danger"
-                      className="mx-2"
-                      disabled={index === 0 || index === 1}
-                    >
-                      Delete
-                    </Button>
+                      <Button
+                        onClick={() => handleDeleteClick(product.id)}
+                        variant="danger"
+                        className="mx-2"
+                        disabled={index === 0 || index === 1}
+                      >
+                        Delete
+                      </Button>
                     </span>
                   </td>
                 </tr>
@@ -156,20 +154,18 @@ const Product = () => {
         </div>
       </div>
 
-      <CreateProductModal
-        show={showCreateModal}
-        handleClose={() => setShowCreateModal(false)}
-        handleCreate={handleCreateProduct}
-      />
+      {/* Create Product Modal */}
+      <Modal show={showCreateModal} onHide={() => setShowCreateModal(false)}>
+        <CreateProductModal handleCreate={handleCreateProduct} handleClose={() => setShowCreateModal(false)} />
+      </Modal>
 
-      {setSelectedProduct && (
+      {/* Edit Product Modal */}
+      <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
         <EditProductModal
-          show={showEditModal}
           handleClose={() => setShowEditModal(false)}
           product={selectedProduct}
-          handleSave={handleSaveChanges}
-        />
-      )}
+          handleSave={handleSaveChanges} />
+      </Modal>
     </div>
   );
 };

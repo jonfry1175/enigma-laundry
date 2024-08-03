@@ -1,16 +1,16 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Button, Table } from "react-bootstrap";
-import { axiosInstance } from "../../../lib/axios";
+import { Button, Modal, Table } from "react-bootstrap";
+import { axiosInstance } from "../../lib/axios";
 import { toast } from "sonner";
 import { confirmAlert } from "react-confirm-alert";
-import EditCustomerModal from "./EditCustomerModal";
-import CreateCustomerModal from "./CreateCustomerModal";
-import Sidebar from "../../../components/Sidebar";
+import Sidebar from "../../components/Sidebar";
 import { useSelector } from "react-redux";
-import { IsAuth } from "../../../hoc/checkAuth";
-import { setCustomers } from "../../../store/actions/dataActions";
+import { IsAuth } from "../../hoc/checkAuth";
+import { setCustomers } from "../../store/actions/dataActions";
 import { useDispatch } from "react-redux";
+import CreateCustomer from "../../components/modals/CreateCustomerModal";
+import EditCustomerModal from "../../components/modals/EditCustomerModal";
 
 const Customer = () => {
   const dispatch = useDispatch();
@@ -93,7 +93,7 @@ const Customer = () => {
     setShowCreateModal(true);
   };
 
-  const handleCreateCustomer = (newCustomer) => {
+  const fetchCustomers = () => {
     getCustomers();
   };
 
@@ -109,8 +109,8 @@ const Customer = () => {
           <Sidebar />
         </div>
         <div className="col">
-          <div className="text-center">
-            <h1>List Pelanggan</h1>
+          <div >
+            <h1 className="text-center">Customer List</h1>
             <Button variant="primary" onClick={handleCreateClick}>Create Customer</Button>
             <Table striped bordered hover>
               <thead>
@@ -155,20 +155,20 @@ const Customer = () => {
         </div>
       </div>
 
+     {/* Edit Customer Modal */}
       {selectedCustomer && (
-        <EditCustomerModal
-          show={showEditModal}
-          handleClose={() => setShowEditModal(false)}
-          customer={selectedCustomer}
+        <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
+          <EditCustomerModal 
+          customer={selectedCustomer} 
           handleSave={handleSaveChanges}
-        />
+          handleClose={() => setShowEditModal(false)}/>
+        </Modal>
       )}
 
-      <CreateCustomerModal
-        show={showCreateModal}
-        handleClose={() => setShowCreateModal(false)}
-        handleCreate={handleCreateCustomer}
-      />
+      {/* Create Customer Modal */}
+      <Modal show={showCreateModal} onHide={() => setShowCreateModal(false)}>
+      <CreateCustomer fetchCustomers={fetchCustomers} handleClose={() => setShowCreateModal(false)}/>
+      </Modal>
     </div>
   );
 };
