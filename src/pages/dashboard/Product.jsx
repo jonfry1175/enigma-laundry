@@ -6,13 +6,13 @@ import { toast } from "sonner";
 import { confirmAlert } from "react-confirm-alert";
 import { useSelector, useDispatch } from "react-redux";
 import { IsAuth } from "../../hoc/checkAuth";
-import { setProducts } from "../../store/actions/dataActions";
+import { destroyProduct, setProducts } from "../../store/actions/productActions";
 import CreateProductModal from "../../components/modals/CreateProductModal";
 import EditProductModal from "../../components/modals/EditProductModal";
 
 const Product = () => {
   const dispatch = useDispatch();
-  const products = useSelector((state) => state.data.products);
+  const products = useSelector((state) => state.product.products);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -40,9 +40,9 @@ const Product = () => {
       };
 
       const result = await axiosInstance.delete(`/products/${id}`, { headers });
+      dispatch(destroyProduct(id));
       if (result.status === 204) {
         toast.success("Delete Success");
-        getProducts();
       }
     } catch (error) {
       console.log(error.message);
@@ -71,33 +71,11 @@ const Product = () => {
     setShowCreateModal(true);
   };
 
-  const handleCreateProduct = (newProduct) => {
-    getProducts();
-  };
-
-  const handleEditClick = (customer) => {
-    setSelectedProduct(customer);
+  const handleEditClick = (product) => {
+    setSelectedProduct(product);
     setShowEditModal(true);
   };
 
-  const handleSaveChanges = async (id, updatedData) => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${token}`,
-      };
-      const result = await axiosInstance.put(`/products/`, updatedData, {
-        headers,
-      });
-      if (result.status === 200) {
-        toast.success("Update Success");
-        getProducts();
-        setShowEditModal(false);
-      }
-    } catch (error) {
-      console.log(error.message);
-      toast.error("Update Failed");
-    }
-  };
 
   useEffect(() => {
     getProducts();
@@ -156,7 +134,7 @@ const Product = () => {
 
       {/* Create Product Modal */}
       <Modal show={showCreateModal} onHide={() => setShowCreateModal(false)}>
-        <CreateProductModal handleCreate={handleCreateProduct} handleClose={() => setShowCreateModal(false)} />
+        <CreateProductModal handleClose={() => setShowCreateModal(false)} />
       </Modal>
 
       {/* Edit Product Modal */}
@@ -164,7 +142,7 @@ const Product = () => {
         <EditProductModal
           handleClose={() => setShowEditModal(false)}
           product={selectedProduct}
-          handleSave={handleSaveChanges} />
+          />
       </Modal>
     </div>
   );

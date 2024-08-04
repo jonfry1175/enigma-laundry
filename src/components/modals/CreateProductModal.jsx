@@ -1,14 +1,19 @@
 import { Modal, Button, Form } from "react-bootstrap";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { axiosInstance } from "../../lib/axios";
-const CreateProductModal = ({ handleClose, handleCreate }) => {
+import { addProduct } from "../../store/actions/productActions";
+
+
+const CreateProductModal = ({ handleClose }) => {
     const [formData, setFormData] = useState({
         name: "",
         price: "",
         type: "",
     });
+
+    const dispatch = useDispatch();
     const token = useSelector((state) => state.auth.authData.token);
 
     const handleChange = (e) => {
@@ -30,7 +35,7 @@ const CreateProductModal = ({ handleClose, handleCreate }) => {
             });
             if (response.status === 201) {
                 toast.success("Product Created Successfully");
-                handleCreate(response.data); // Pass newly created product data to the parent component
+                dispatch(addProduct(response.data.data));
                 setTimeout(() => {
                     handleClose();
                 }, 500);

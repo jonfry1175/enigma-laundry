@@ -7,14 +7,14 @@ import { confirmAlert } from "react-confirm-alert";
 import Sidebar from "../../components/Sidebar";
 import { useSelector } from "react-redux";
 import { IsAuth } from "../../hoc/checkAuth";
-import { setCustomers } from "../../store/actions/dataActions";
+import { setCustomers } from "../../store/actions/customerActions";
 import { useDispatch } from "react-redux";
 import CreateCustomer from "../../components/modals/CreateCustomerModal";
 import EditCustomerModal from "../../components/modals/EditCustomerModal";
 
 const Customer = () => {
   const dispatch = useDispatch();
-  const customers = useSelector((state) => state.data.customers);
+  const customers = useSelector((state) => state.customer.customers);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false); // State to control the visibility of the Create Customer modal
@@ -71,23 +71,6 @@ const Customer = () => {
     setSelectedCustomer(customer);
     setShowEditModal(true);
   }
-
-  const handleSaveChanges = async (id, updatedData) => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${token}`,
-      };
-      const result = await axiosInstance.put(`/customers/`, updatedData, { headers });
-
-      if (result.status === 200) {
-        toast.success("Update Success");
-        getCustomers();
-        setShowEditModal(false);
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
 
   const handleCreateClick = () => {
     setShowCreateModal(true);
@@ -160,14 +143,13 @@ const Customer = () => {
         <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
           <EditCustomerModal 
           customer={selectedCustomer} 
-          handleSave={handleSaveChanges}
           handleClose={() => setShowEditModal(false)}/>
         </Modal>
       )}
 
       {/* Create Customer Modal */}
       <Modal show={showCreateModal} onHide={() => setShowCreateModal(false)}>
-      <CreateCustomer fetchCustomers={fetchCustomers} handleClose={() => setShowCreateModal(false)}/>
+      <CreateCustomer handleClose={() => setShowCreateModal(false)}/>
       </Modal>
     </div>
   );

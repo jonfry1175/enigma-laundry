@@ -1,13 +1,42 @@
 import { useState, useEffect } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateProduct } from '../../store/actions/productActions';
+import { toast } from 'sonner';
+import { axiosInstance } from '../../lib/axios';
 
-const EditProductModal = ({ handleClose, product, handleSave }) => {
+const EditProductModal = ({ handleClose, product }) => {
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state.auth.authData.token);
+  
   const [formData, setFormData] = useState({
     id: "",
     name: '',
     price: '',
     type: ''
   });
+
+  const handleSaveChanges = async (e) => {
+    e.preventDefault();
+    try {
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+      const result = await axiosInstance.put(`/products/`, formData, {
+        headers,
+      });
+      if (result.status === 200) {
+        toast.success("Update Success");
+        dispatch(updateProduct(formData));
+        setTimeout(() => {
+          handleClose();
+        }, 500);
+      }
+    } catch (error) {
+      console.log(error.message);
+      toast.error("Update Failed");
+    }
+  };
 
   useEffect(() => {
     if (product) {
@@ -28,10 +57,7 @@ const EditProductModal = ({ handleClose, product, handleSave }) => {
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    handleSave(product.id, formData);
-  };
+ 
 
   return (
     <>
@@ -39,7 +65,7 @@ const EditProductModal = ({ handleClose, product, handleSave }) => {
         <Modal.Title>Edit Product</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSaveChanges}>
           <Form.Group controlId="formName">
             <Form.Label>Name</Form.Label>
             <Form.Control

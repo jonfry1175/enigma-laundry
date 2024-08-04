@@ -1,7 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
+import { updateCustomer } from '../../store/actions/customerActions';
+import { useSelector, useDispatch } from 'react-redux';
+import { axiosInstance } from '../../lib/axios';
+import { toast } from 'sonner';
 
-const EditCustomerModal = ({ handleClose, customer, handleSave }) => {
+const EditCustomerModal = ({ handleClose, customer }) => {
+
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state.auth.authData.token);
   const [formData, setFormData] = useState({
     id: "",
     name: '',
@@ -28,9 +35,24 @@ const EditCustomerModal = ({ handleClose, customer, handleSave }) => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    handleSave(customer.id, formData);
+    try {
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+      const result = await axiosInstance.put(`/customers/`, formData, { headers });
+
+      if (result.status === 200) {
+        toast.success("Update Success");
+        dispatch(updateCustomer(formData));
+        setTimeout(() => {
+          handleClose();
+        }, 500);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   return (

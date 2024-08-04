@@ -32,7 +32,7 @@ function App() {
 
   return (
     <>
-      <Toaster position="top-center" />
+      <Toaster position="top-center" richColors/>
       <Suspense fallback={<Loader />}>
         <Routes>
           <Route path="/" element={<HomePage />} />

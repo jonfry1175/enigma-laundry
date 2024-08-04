@@ -3,8 +3,10 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useSelector } from "react-redux";
 import { axiosInstance } from "../../lib/axios";
+import { useDispatch } from "react-redux";
+import { addCustomer } from "../../store/actions/customerActions";
 
-const CreateCustomer = ({ handleClose, fetchCustomers }) => {
+const CreateCustomer = ({ handleClose }) => {
   const [formData, setFormData] = useState({
     name: "",
     phoneNumber: "",
@@ -12,6 +14,7 @@ const CreateCustomer = ({ handleClose, fetchCustomers }) => {
   });
 
   const token = useSelector((state) => state.auth.authData.token);
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -32,7 +35,7 @@ const CreateCustomer = ({ handleClose, fetchCustomers }) => {
       });
       if (response.status === 201) {
         toast.success("Customer Created Successfully");
-        fetchCustomers(); // Pass newly created customer data to the parent component
+        dispatch(addCustomer(response.data.data));
         setTimeout(() => {
           handleClose();
         }, 500);

@@ -4,13 +4,13 @@ import { Button, Table, Modal, Badge} from "react-bootstrap";
 import { axiosInstance } from "../../lib/axios";
 import { IsAuth } from "../../hoc/checkAuth";
 import { useDispatch, useSelector } from "react-redux";
-import { setTransactions } from "../../store/actions/dataActions";
+import { setTransactions } from "../../store/actions/transactionActions.js";
 import CreateTransactionModal from "../../components/modals/CreateTransactionModal";
 import DetailTransactionModal from "../../components/modals/DetailTransactionModal";
 
 const Transactions = () => {
   const dispatch = useDispatch();
-  const transactions = useSelector((state) => state.data.transactions);
+  const transactions = useSelector((state) => state.transaction.transactions);
   const role = useSelector((state) => state.auth.authData.role);
 
   const [selectedCustomer, setSelectedCustomer] = useState(null);
@@ -132,7 +132,6 @@ const Transactions = () => {
       <Modal show={showModalCreate} onHide={() => setShowModalCreate(false)}>
         <CreateTransactionModal
           handleClose={() => setShowModalCreate(false)}
-          fetchTransactions={getTransactions}
         />
       </Modal>
     </div>

@@ -1,15 +1,17 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setCustomers, setProducts } from "../../store/actions/dataActions";
+import { setCustomers } from "../../store/actions/customerActions";
+import { setProducts } from "../../store/actions/productActions";
 import { axiosInstance } from "../../lib/axios";
 import { toast } from "sonner";
 import { Modal, Button, Form } from "react-bootstrap";
+import { addTransaction } from "../../store/actions/transactionActions.js";
 
-const CreateTransactionModal = ({ handleClose, fetchTransactions }) => {
+const CreateTransactionModal = ({ handleClose }) => {
     const dispatch = useDispatch();
-    const products = useSelector((state) => state.data.products);
-    const customers = useSelector((state) => state.data.customers);
+    const products = useSelector((state) => state.product.products);
+    const customers = useSelector((state) => state.customer.customers);
     const [selectedProduct, setSelectedProduct] = useState("");
     const [selectedCustomerId, setSelectedCustomerId] = useState("");
     const [quantity, setQuantity] = useState(0);
@@ -35,7 +37,7 @@ const CreateTransactionModal = ({ handleClose, fetchTransactions }) => {
             const response = await axiosInstance.post("/bills", payload, { headers });
             if (response.status === 201) {
                 toast.success("Transaction Created Successfully");
-                fetchTransactions();
+                dispatch(addTransaction(response.data.data));
                 setTimeout(() => {
                     handleClose();
                 }, 500);
