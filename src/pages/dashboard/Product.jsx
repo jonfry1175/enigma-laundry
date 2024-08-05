@@ -76,10 +76,19 @@ const Product = () => {
     setShowEditModal(true);
   };
 
+  const formatRupiah = (number) => {
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(number);
+  };
 
   useEffect(() => {
     getProducts();
   }, []);
+
   return (
     <div>
       <div className="row">
@@ -106,7 +115,7 @@ const Product = () => {
                 <tr key={index}>
                   <td>{index + 1}</td>
                   <td>{product.name}</td>
-                  <td>{product.price}</td>
+                  <td>{formatRupiah(product.price)}</td>
                   <td>{product.type}</td>
                   <td>
                     <Button
@@ -142,7 +151,7 @@ const Product = () => {
         <EditProductModal
           handleClose={() => setShowEditModal(false)}
           product={selectedProduct}
-          />
+        />
       </Modal>
     </div>
   );

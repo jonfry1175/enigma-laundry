@@ -4,60 +4,81 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateProduct } from '../../store/actions/productActions';
 import { toast } from 'sonner';
 import { axiosInstance } from '../../lib/axios';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+
+// Definisikan schema validasi dengan Zod
+const productSchema = z.object({
+  id: z.string(),
+  name: z.string().min(1, "Name is required"),
+  price: z.number().positive("Price must be positive").min(1000, "Minimal Rp. 1000"),
+  type: z.string().min(1, "Type is required"),
+});
 
 const EditProductModal = ({ handleClose, product }) => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.authData.token);
-  
-  const [formData, setFormData] = useState({
-    id: "",
-    name: '',
-    price: '',
-    type: ''
+
+  const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm({
+    resolver: zodResolver(productSchema),
+    mode: 'onChange',
+    defaultValues: {
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      type: product.type,
+    },
   });
 
-  const handleSaveChanges = async (e) => {
-    e.preventDefault();
+  useEffect(() => {
+    if (product) {
+      setValue('id', product.id);
+      setValue('name', product.name);
+      setValue('price', product.price);
+      setValue('type', product.type);
+    }
+  }, [product, setValue]);
+
+  const onSubmit = async (data) => {
     try {
       const headers = {
         Authorization: `Bearer ${token}`,
       };
-      const result = await axiosInstance.put(`/products/`, formData, {
-        headers,
-      });
-      if (result.status === 200) {
-        toast.success("Update Success");
-        dispatch(updateProduct(formData));
+      const response = await axiosInstance.put('/products/', data, { headers });
+
+      if (response.status === 200) {
+        toast.success('Update Success');
+        dispatch(updateProduct(data));
         setTimeout(() => {
           handleClose();
         }, 500);
       }
     } catch (error) {
       console.log(error.message);
-      toast.error("Update Failed");
+      toast.error('Update Failed');
     }
   };
 
-  useEffect(() => {
-    if (product) {
-      setFormData({
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        type: product.type
-      });
-    }
-  }, [ product ]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: name === "price" ? parseFloat(value) : value,
-    });
+  const formatRupiah = (number) => {
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(number);
   };
 
- 
+  const handlePriceChange = (e) => {
+    const value = e.target.value.replace(/\D/g, ''); // Remove non-digit characters
+    const numberValue = parseFloat(value);
+    setValue('price', numberValue);
+  };
+
+  const price = watch('price');
+  const formattedPrice = formatRupiah(price);
+
+  const dummyTypes = ['Kg', 'Pcs'];
 
   return (
     <>
@@ -65,33 +86,44 @@ const EditProductModal = ({ handleClose, product }) => {
         <Modal.Title>Edit Product</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form onSubmit={handleSaveChanges}>
+        <Form onSubmit={handleSubmit(onSubmit)}>
           <Form.Group controlId="formName">
             <Form.Label>Name</Form.Label>
             <Form.Control
               type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
+              {...register('name')}
+              isInvalid={!!errors.name}
             />
+            <Form.Control.Feedback type="invalid">
+              {errors.name?.message}
+            </Form.Control.Feedback>
           </Form.Group>
-          <Form.Group controlId="formPhoneNumber" className="mt-3">
+          <Form.Group controlId="formPrice" className="mt-3">
             <Form.Label>Price</Form.Label>
             <Form.Control
-              type="number"
-              name="price"
-              value={formData.price}
-              onChange={handleChange}
-            />
-          </Form.Group>
-          <Form.Group controlId="formAddress" className="mt-3">
-            <Form.Label>Type</Form.Label>
-            <Form.Control
               type="text"
-              name="type"
-              value={formData.type}
-              onChange={handleChange}
+              value={formattedPrice}
+              onChange={handlePriceChange}
+              isInvalid={!!errors.price}
             />
+            <Form.Control.Feedback type="invalid">
+              {errors.price?.message}
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group controlId="formType" className="mt-3">
+            <Form.Label>Type</Form.Label>
+            <Form.Select
+              {...register('type')}
+              isInvalid={!!errors.type}
+            >
+              <option value="" disabled>Select type</option>
+              {dummyTypes.map((type, index) => (
+                <option key={index} value={type}>{type}</option>
+              ))}
+            </Form.Select>
+            <Form.Control.Feedback type="invalid">
+              {errors.type?.message}
+            </Form.Control.Feedback>
           </Form.Group>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>
@@ -103,7 +135,7 @@ const EditProductModal = ({ handleClose, product }) => {
           </Modal.Footer>
         </Form>
       </Modal.Body>
-      </>
+    </>
   );
 };
 

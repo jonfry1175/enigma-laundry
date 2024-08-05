@@ -76,11 +76,6 @@ const Customer = () => {
     setShowCreateModal(true);
   };
 
-  const fetchCustomers = () => {
-    getCustomers();
-  };
-
-
   useEffect(() => {
     getCustomers();
   }, []);

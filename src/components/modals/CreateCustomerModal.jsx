@@ -1,36 +1,37 @@
 import { Modal, Button, Form } from "react-bootstrap";
-import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { toast } from "sonner";
-import { useSelector } from "react-redux";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { axiosInstance } from "../../lib/axios";
-import { useDispatch } from "react-redux";
 import { addCustomer } from "../../store/actions/customerActions";
+import { z } from "zod";
+
+const customerSchema = z.object({
+  name: z.string().min(3, "Minimum 3 characters"),
+  phoneNumber: z.string().min(10, "Minimum 10 characters"),
+  address: z.string().min(3, "Minimum 3 characters"),
+});
 
 const CreateCustomer = ({ handleClose }) => {
-  const [formData, setFormData] = useState({
-    name: "",
-    phoneNumber: "",
-    address: "",
-  });
-
   const token = useSelector((state) => state.auth.authData.token);
   const dispatch = useDispatch();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(customerSchema),
+    mode: "onChange",
+  });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const onSubmit = async (data) => {
     try {
       const headers = {
         Authorization: `Bearer ${token}`,
       };
-      const response = await axiosInstance.post("/customers/", formData, {
+      const response = await axiosInstance.post("/customers/", data, {
         headers,
       });
       if (response.status === 201) {
@@ -42,7 +43,7 @@ const CreateCustomer = ({ handleClose }) => {
       }
     } catch (error) {
       console.log(error.message);
-      toast.error("server error");
+      toast.error("Server error");
     }
   };
 
@@ -52,36 +53,39 @@ const CreateCustomer = ({ handleClose }) => {
         <Modal.Title>Create Customer</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit(onSubmit)}>
           <Form.Group controlId="formName">
             <Form.Label>Name</Form.Label>
             <Form.Control
               type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              required
+              {...register("name")}
+              isInvalid={!!errors.name}
             />
+            <Form.Control.Feedback type="invalid">
+              {errors.name?.message}
+            </Form.Control.Feedback>
           </Form.Group>
           <Form.Group controlId="formPhoneNumber" className="mt-3">
             <Form.Label>Phone Number</Form.Label>
             <Form.Control
-              type="text"
-              name="phoneNumber"
-              value={formData.phoneNumber}
-              onChange={handleChange}
-              required
+              type="number"
+              {...register("phoneNumber")}
+              isInvalid={!!errors.phoneNumber}
             />
+            <Form.Control.Feedback type="invalid">
+              {errors.phoneNumber?.message}
+            </Form.Control.Feedback>
           </Form.Group>
           <Form.Group controlId="formAddress" className="mt-3">
             <Form.Label>Address</Form.Label>
             <Form.Control
               type="text"
-              name="address"
-              value={formData.address}
-              onChange={handleChange}
-              required
+              {...register("address")}
+              isInvalid={!!errors.address}
             />
+            <Form.Control.Feedback type="invalid">
+              {errors.address?.message}
+            </Form.Control.Feedback>
           </Form.Group>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>
@@ -93,7 +97,7 @@ const CreateCustomer = ({ handleClose }) => {
           </Modal.Footer>
         </Form>
       </Modal.Body>
-      </>
+    </>
   );
 };
 

@@ -36,10 +36,9 @@ const DetailTransactionModal = ({ selectedCustomer, handleClose }) => {
                                     <td><Badge bg="secondary">{transaction.id.slice(0, 8)}</Badge></td>
                                     <td>{formatDate(transaction.billDate)}</td>
                                     <td>
-                                        {transaction.billDetails.reduce(
-                                            (acc, item) => acc + item.qty,
-                                            0
-                                        )}
+                                        {transaction.billDetails.map((item) => item.qty)}
+                                        <span> </span>
+                                         
                                         {transaction.billDetails.map((item) => item.product.type)}
                                     </td>
                                     <td>
