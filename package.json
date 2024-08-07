@@ -17,6 +17,7 @@
     "braces": "^3.0.3",
     "debug": "^4.3.6",
     "dotenv": "^16.4.5",
+    "esm": "^3.2.25",
     "eventemitter3": "^5.0.1",
     "fill-range": "^7.1.1",
     "follow-redirects": "^1.15.6",
