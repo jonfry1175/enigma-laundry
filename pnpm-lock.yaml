@@ -32,6 +32,9 @@ importers:
       eventemitter3:
         specifier: ^5.0.1
         version: 5.0.1
+      fill-range:
+        specifier: ^7.1.1
+        version: 7.1.1
       follow-redirects:
         specifier: ^1.15.6
         version: 1.15.6(debug@4.3.6)
