@@ -29,6 +29,9 @@ importers:
       eventemitter3:
         specifier: ^5.0.1
         version: 5.0.1
+      follow-redirects:
+        specifier: ^1.15.6
+        version: 1.15.6(debug@4.3.6)
       http-proxy:
         specifier: ^1.18.1
         version: 1.18.1(debug@4.3.6)
