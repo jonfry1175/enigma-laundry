@@ -50,6 +50,9 @@ importers:
       is-glob:
         specifier: ^4.0.3
         version: 4.0.3
+      is-number:
+        specifier: ^7.0.0
+        version: 7.0.0
       is-plain-obj:
         specifier: ^4.1.0
         version: 4.1.0
