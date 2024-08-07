@@ -26,4 +26,4 @@ dist-ssr
 
 
 # Environment variables file
-.env
+# .env
