@@ -50,7 +50,7 @@ const LoginPage = () => {
       } else {
         toast.error("server error");
       }
-      console.log(error.message);
+      console.log(error);
     }
   };
 
