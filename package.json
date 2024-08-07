@@ -20,6 +20,7 @@
     "follow-redirects": "^1.15.6",
     "http-proxy": "^1.18.1",
     "http-proxy-middleware": "^3.0.0",
+    "is-extglob": "^2.1.1",
     "is-glob": "^4.0.3",
     "is-plain-obj": "^4.1.0",
     "jwt-decode": "^4.0.0",
