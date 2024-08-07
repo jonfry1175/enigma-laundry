@@ -32,6 +32,9 @@ importers:
       http-proxy-middleware:
         specifier: ^3.0.0
         version: 3.0.0
+      is-glob:
+        specifier: ^4.0.3
+        version: 4.0.3
       jwt-decode:
         specifier: ^4.0.0
         version: 4.0.0
