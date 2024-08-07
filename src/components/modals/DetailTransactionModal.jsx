@@ -20,12 +20,12 @@ const DetailTransactionModal = ({ selectedCustomer, handleClose }) => {
             </Modal.Header>
             <Modal.Body>
                 {selectedCustomer && (
-                    <Table striped bordered hover>
+                    <Table striped bordered hover responsive>
                         <thead>
                             <tr>
                                 <th>Kode Transaksi</th>
                                 <th>Tanggal Transaksi</th>
-                                <th>QTY</th>
+                                <th>Jumlah</th>
                                 <th>Jenis Laundry</th>
                                 <th>Total Harga</th>
                             </tr>
@@ -38,7 +38,7 @@ const DetailTransactionModal = ({ selectedCustomer, handleClose }) => {
                                     <td>
                                         {transaction.billDetails.map((item) => item.qty)}
                                         <span> </span>
-                                         
+
                                         {transaction.billDetails.map((item) => item.product.type)}
                                     </td>
                                     <td>

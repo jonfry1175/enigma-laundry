@@ -32,7 +32,8 @@ function App() {
 
   return (
     <>
-      <Toaster position="top-center" richColors/>
+    {/* close toast on click */}
+      <Toaster position="top-center" richColors closeButton/>
       <Suspense fallback={<Loader />}>
         <Routes>
           <Route path="/" element={<HomePage />} />

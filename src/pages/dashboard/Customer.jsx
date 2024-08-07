@@ -82,15 +82,15 @@ const Customer = () => {
 
   return (
     <div>
-      <div className="row">
-        <div className="col-auto">
+      <div className="row ">
+        <div className="col-auto ">
           <Sidebar />
         </div>
-        <div className="col">
+        <div className="col ms-5 ps-5 ms-md-0 ps-md-0">
           <div >
             <h1 className="text-center">Customer List</h1>
             <Button variant="primary" onClick={handleCreateClick}>Create Customer</Button>
-            <Table striped bordered hover>
+            <Table striped bordered hover responsive>
               <thead>
                 <tr>
                   <th>#</th>
