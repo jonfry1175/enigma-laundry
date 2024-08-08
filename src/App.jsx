@@ -21,11 +21,6 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const apiUrl = import.meta.env.VITE_API_URL;
-    const laundryApiUrl = import.meta.env.LAUNDRY_API_URL;
-    console.log("API URL:", apiUrl);
-    console.log("Laundry API URL:", laundryApiUrl);
-
     if (dataAuth?.token) {
       const timeoutId = setTimeout(() => {
         dispatch(refreshToken());

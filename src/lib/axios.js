@@ -1,5 +1,5 @@
 import axios from "axios";
 
 export const axiosInstance = axios.create({
-  baseURL: '/api', // Use the redirect path
+  baseURL: import.meta.env.VITE_API_URL,
 })
