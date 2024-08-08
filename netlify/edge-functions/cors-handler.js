@@ -1,8 +1,5 @@
-import {  Context } from '@netlify/edge-functions';
-
-export default async (request, context) => {
-  const response = await context.next();
-  console.log('Response status:', response.status); // Log response status
+export default async (request) => {
+  const response = await fetch(request);
   return new Response(response.body, {
     headers: {
       'Access-Control-Allow-Origin': '*',
@@ -10,8 +7,4 @@ export default async (request, context) => {
       'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     },
   });
-};
-
-export const config = {
-  path: '/*',
 };
