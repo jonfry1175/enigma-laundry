@@ -77,6 +77,9 @@ importers:
       picomatch:
         specifier: ^4.0.2
         version: 4.0.2
+      proxy-from-env:
+        specifier: ^1.1.0
+        version: 1.1.0
       react:
         specifier: ^18.2.0
         version: 18.3.1
