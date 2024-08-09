@@ -77,6 +77,9 @@ importers:
       micromatch:
         specifier: ^4.0.7
         version: 4.0.7
+      mime-types:
+        specifier: ^2.1.35
+        version: 2.1.35
       ms:
         specifier: ^2.1.3
         version: 2.1.3
