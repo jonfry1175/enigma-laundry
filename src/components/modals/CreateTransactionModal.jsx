@@ -134,7 +134,7 @@ const CreateTransactionModal = ({ handleClose }) => {
                             <option value="" disabled>Pilih Nama Konsumen</option>
                             {customers.map((customer, index) => (
                                 <option key={customer.id} value={customer.id} disabled={index > 1}>
-                                    {customer.name}
+                                    {index > 1 ? `${customer.name} (tidak dapat dipilih)` : customer.name}
                                 </option>
                             ))}
                         </Form.Control>
@@ -154,7 +154,7 @@ const CreateTransactionModal = ({ handleClose }) => {
                             <option value="" disabled>Pilih Paket Laundry</option>
                             {products.map((product, index) => (
                                 <option key={product.id} value={product.id} disabled={index > 1}>
-                                    {product.name}
+                                    {index > 1 ? `${product.name} (tidak dapat dipilih)` : product.name}
                                 </option>
                             ))}
                         </Form.Control>
