@@ -17,6 +17,7 @@
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "braces": "^3.0.3",
+    "combined-stream": "^1.0.8",
     "debug": "^4.3.6",
     "dotenv": "^16.4.5",
     "esm": "^3.2.25",
