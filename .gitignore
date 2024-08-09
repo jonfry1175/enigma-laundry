@@ -30,3 +30,10 @@ dist-ssr
 .env.example
 
 # kmkmk
+node_modules
+node_modules
+node_modules
+node_modules
+pnpm-lock.yaml
+# Local Netlify folder
+.netlify
