@@ -86,7 +86,7 @@ const Customer = () => {
         <div className="col-auto ">
           <Sidebar />
         </div>
-        <div className="col ms-5 ps-5 ms-md-0 ps-md-0">
+        <div className="col mx-5 px-5 mx-md-0 px-md-0">
           <div >
             <h1 className="text-center">Customer List</h1>
             <Button variant="primary" onClick={handleCreateClick}>Create Customer</Button>

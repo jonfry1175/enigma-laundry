@@ -95,7 +95,7 @@ const Product = () => {
         <div className="col-auto">
           <Sidebar />
         </div>
-        <div className="col col ms-5 ps-5 ms-md-0 ps-md-0">
+        <div className="col mx-5 px-5 mx-md-0 px-md-0">
           <h1 className="text-center">Product List</h1>
           <Button onClick={handleCreateClick} variant="primary" className={role === "admin" ? "" : "d-none"}>
             Add Product
