@@ -22,6 +22,7 @@
     "eventemitter3": "^5.0.1",
     "fill-range": "^7.1.1",
     "follow-redirects": "^1.15.6",
+    "form-data": "^4.0.0",
     "http-proxy": "^1.18.1",
     "http-proxy-middleware": "^3.0.0",
     "is-extglob": "^2.1.1",
