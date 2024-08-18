@@ -1,7 +1,6 @@
 const DEFAULT_STATE = {
     authData: JSON.parse(localStorage.getItem("authData")) || null,
 };
-// TODO: refresh token ubah value authData.token
 // token ada didalam authData
 
     export const authReducer = (state = DEFAULT_STATE, action) => {

@@ -73,7 +73,7 @@ const Transactions = () => {
         <div className="col-auto ">
           <Sidebar />
         </div>
-        <div className="mx-5 px-5 mx-md-0 px-md-0">
+        <div className="col mx-5 px-5 mx-md-0 px-md-0">
           <h1 className="text-center">Customer Transactions List</h1>
           {/* <Button onClick={check} variant="primary">
             Cek Transaksi
