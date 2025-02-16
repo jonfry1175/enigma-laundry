@@ -18,15 +18,21 @@ const Product = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
 
   const token = useSelector((state) => state.auth.authData.token);
+  console.log({ token })
   const role = useSelector((state) => state.auth.authData.role);
 
   const getProducts = async () => {
     try {
-      const headers = {
-        Authorization: `Bearer ${token}`,
-      };
+      // const headers = {
+      //   Authorization: `Bearer ${token}`,
+      // };
 
-      const response = await axiosInstance.get("/products", { headers });
+      const response = await axiosInstance.get("/products", {
+        headers:
+        {
+          Authorization: `Bearer ${token}`,
+        }
+      });
       dispatch(setProducts(response.data.data));
     } catch (error) {
       console.log(error.message);
